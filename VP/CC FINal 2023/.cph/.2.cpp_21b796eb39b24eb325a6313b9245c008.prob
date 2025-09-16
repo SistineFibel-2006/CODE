@@ -1,0 +1,1 @@
+{"name":"Local: 2","url":"c:\\Users\\XK\\Desktop\\CODE\\VP\\CC FINal 2023\\2.cpp","tests":[{"id":1743309579606,"input":" 3\n 3\n 1 1 4 5 1 4\n 2\n 1 2 3 4\n 4\n 1 2 2 3 2 1 1 4","output":""}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"c:\\Users\\XK\\Desktop\\CODE\\VP\\CC FINal 2023\\2.cpp","group":"local","local":true}

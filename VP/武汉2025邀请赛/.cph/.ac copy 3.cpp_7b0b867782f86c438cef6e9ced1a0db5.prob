@@ -1,0 +1,1 @@
+{"name":"Local: ac copy 3","url":"c:\\Users\\XK\\Desktop\\CODE\\VP\\武汉2025邀请赛\\ac copy 3.cpp","tests":[{"id":1746085722100,"input":"4\n8\n3 5 9 8 2 11 5 6\n7\n7 9 2 4 17 10 15\n1\n100\n2\n100 100","output":""}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"c:\\Users\\XK\\Desktop\\CODE\\VP\\武汉2025邀请赛\\ac copy 3.cpp","group":"local","local":true}

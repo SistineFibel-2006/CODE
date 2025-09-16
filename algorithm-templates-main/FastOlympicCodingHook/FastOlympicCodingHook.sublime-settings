@@ -1,0 +1,17 @@
+{
+	// where your template file is
+	//C:\Users\XK\Desktop\CODE
+	"template-file": "C:\\Users\\XK\\Desktop\\CODE\\template.cpp",
+	// where to save your problem information
+	"parse-folder" : "C:\\Users\\XK\\Desktop\\CODENEW\\",
+	"server-port": 1327,
+	// how to stringify time
+	// %Y = Year
+	// %m = Month
+	// %d = Date
+	// %H = Hour
+	// %M = Minute
+	// %S = Second
+	"time-format" : "%Y-%m-%d %H:%M:%S",
+	"file-suffix": "cpp",
+}

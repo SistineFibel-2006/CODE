@@ -1,0 +1,43 @@
+<html>
+  <head>
+    <title>Test 1</title>
+    <meta charset="UTF-8">
+    <style>
+      body {
+        background-color: green;
+        color: #333;
+        line-height: 1.6;
+        padding: 20px;
+        max-width: 1000px;
+        margin: 0 auto;
+      }
+    #box {
+      width: 50px;
+      height: 50px;
+      background: tomato;
+      position: relative;
+    }
+    </style>
+  </head>
+  <body>
+    <link rel="google" href="www.google.com">
+    <link rel="bilibili" href="www.bililbili.com">
+    <a href="https://www.bilibili.com"><h1>BILIBILI</h1></a>
+    <button onclick="movebox()">click me to move</button>
+    <div id="box"></div>
+    <script>
+    function movebox() {
+      const box = document.getElementById("box");
+      let pos = 0;
+      const timer = setInterval(() => {
+        if(pos >= 200)
+          clearInterval(timer);
+        else {
+          pos ++;
+          box.style.left = pos + "px";
+        }
+      }, 10);
+    }
+    </script>
+  </body>
+</html>

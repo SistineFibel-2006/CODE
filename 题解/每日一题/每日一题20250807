@@ -1,0 +1,91 @@
+# 题解 ：2025/8/7
+
+## A : 11/22 String
+
+​	根据题意可以看出，要判断这个长度为n的字符串是不是最中间是 '/' , 之后左半边都是 '1'，右半边都是 ‘2’ 。
+
+直接模拟即可：
+
+```cpp
+#include <stdio.h>
+
+int main(void){
+	int n, ok = 1;
+	char s[101];
+	scanf("%d%s", &n, s);
+	if (s[n/2] != '/' || n % 2 != 1)
+		ok = 0;
+	for (int i = 0; i < n / 2; i++)
+		if (s[i] != '1')
+			ok = 0;
+	for (int i = n / 2 + 1; i < n; i++)
+		if (s[i] != '2')
+			ok = 0;
+	puts(ok ? "Yes" : "No");
+	return 0;
+}
+
+```
+
+## B : 1122 String
+
+​	题意：从0开始偶数间隔，每每偶数对的两个字符相等，且整个字符串中，一个字符只能出现0或2次。
+
+​	注意这里没有给出字符串的长度，所以使用 != '\0' 来判断是否到结尾即可
+
+```c++
+#include <iostream>
+int main() {
+    char a[100];
+    int t[300] = {0}; //记录该字符是否已经出现过
+    bool ok = 1;
+    scanf("%s", a);
+    for(int i = 0; a[i] != '\0'; i += 2)
+        if(a[i] != a[i + 1] || t[a[i]] != 0)
+            ok = 0;
+        else
+            t[a[i]] ++;
+    puts(ok ? "Yes" : "No");
+}
+```
+
+## C : 11/22 Substring
+
+​	题意：在一个字符串中，寻找最长的 11/22串（即A题中的定义） 。
+
+​	可以发现，如果枚举每一位的话，对于 $2*10^5$ 的长度来说是不现实的，需要想一个相对更快的解法来写。
+
+​	我们可以先从头开始找，直到找到一个 '\ ' 才停下（ 即 ： $s[position] ==$ '\ '）， 这个时候从当前位置向两边枚举，查看是否是左边一个 1， 右边一个 2，这时候存储 当前计数器 $cnt = cnt + 2$ ，直到不满足刚刚的条件时，更新答案的值 $ans = max(ans, cnt)$ 。 然后接着向后搜索。
+
+​	这时我们会发现，显然已经搜过的地方是没有 '\ ' 的了， 所以我们可以将当前 搜索位置的 计数器 $position$ 改变到刚刚搜索的最右端 $right$ 的位置！这显然让我们的程序更快了！
+
+​	即 $position = right$ ，而不是单纯的 $position = position + 1$ 	
+
+​	之后我们可以计算得出，我们只需要单纯的过一遍整个N长度的 字符串，就可以完成找到最长 11/22串 的操作， 即 时间复杂度为 $O(N)$
+
+```cpp
+#include <stdio.h>
+int main() {
+	int N,cnt;
+	int position = 0, ans = 0;
+	int l,r;
+	scanf("%d",&n);
+	char s[n];
+	scanf("%s",&s);
+	while(position < n){
+		if(s[position]=='/'){  //搜索到了 "/"， 那么开始计数
+			cnt = 1;     
+			for(l = position - 1, r = position + 1; l >= 0 && r < n; l --, r ++) //向左右两边搜索1，2
+				if(s[l] == '1' && s[r] == '2')
+					cnt += 2; //搜到了那么 cnt = cnt + 2
+				else
+					break;  //没搜到那么终止
+			ans = max(ans, cnt); //更新最大值
+			position = r;
+		}else
+			position ++;
+	}printf("%d",ans);
+	return 0;
+}
+```
+

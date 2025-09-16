@@ -1,0 +1,16 @@
+[
+	{
+		"correct_answers":
+		[
+			"16"
+		],
+		"test": "3 1\nnowcoder\nnowdays\nnow\n1 3\n"
+	},
+	{
+		"correct_answers":
+		[
+			"34"
+		],
+		"test": "4 1\nnowcoder\nnowdays\ndays\ncoder\n1 4\n"
+	}
+]

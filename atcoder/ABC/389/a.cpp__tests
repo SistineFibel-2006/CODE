@@ -1,0 +1,16 @@
+[
+	{
+		"correct_answers":
+		[
+			"24"
+		],
+		"test": "3x8\n"
+	},
+	{
+		"correct_answers":
+		[
+			"81"
+		],
+		"test": "9x9\n"
+	}
+]

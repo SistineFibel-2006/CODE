@@ -1,0 +1,23 @@
+[
+	{
+		"correct_answers":
+		[
+			"3"
+		],
+		"test": "4\n1 1 0 2\nMEEX\n"
+	},
+	{
+		"correct_answers":
+		[
+			"0"
+		],
+		"test": "3\n0 0 0\nXXX\n"
+	},
+	{
+		"correct_answers":
+		[
+			"13"
+		],
+		"test": "15\n1 1 2 0 0 2 0 2 0 0 0 0 0 2 2\nEXMMXXXEMEXEXMM\n"
+	}
+]

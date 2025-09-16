@@ -1,0 +1,9 @@
+[
+	{
+		"correct_answers":
+		[
+			"1\n0\n3\n5\n0"
+		],
+		"test": "5\n12\nuabcuwawauwa\n9\nuuwawauwa\n20\nuuwawauwauuwawauwawa\n20\nuxuwawauwauxuwawauwa\n13\nuabcuwawauuwa\n"
+	}
+]

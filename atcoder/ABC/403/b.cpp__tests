@@ -1,0 +1,23 @@
+[
+	{
+		"correct_answers":
+		[
+			"Yes"
+		],
+		"test": "tak??a?h?\nnashi\n"
+	},
+	{
+		"correct_answers":
+		[
+			"No"
+		],
+		"test": "??e??e\nsnuke\n"
+	},
+	{
+		"correct_answers":
+		[
+			"Yes"
+		],
+		"test": "????\naoki\n"
+	}
+]

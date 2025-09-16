@@ -1,0 +1,24 @@
+[
+	{
+		"correct_answers":
+		[
+			"3"
+		],
+		"test": "3 4\n1 2 3\n",
+		"uncorrect_answers":
+		[
+			"2\n0"
+		]
+	},
+	{
+		"correct_answers":
+		[
+			"3"
+		],
+		"test": "3 4\n1 3 3\n",
+		"uncorrect_answers":
+		[
+			"0"
+		]
+	}
+]

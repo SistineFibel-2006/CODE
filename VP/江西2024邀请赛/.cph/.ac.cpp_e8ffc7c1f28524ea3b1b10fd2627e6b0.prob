@@ -1,0 +1,1 @@
+{"name":"Local: ac","url":"c:\\Users\\XK\\Desktop\\CODE\\VP\\江西2024邀请赛\\ac.cpp","tests":[{"id":1747551471084,"input":"3 3\n1 2 3","output":""},{"id":1747551481728,"input":"4 -2\n3 -10 2 3","output":""}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"c:\\Users\\XK\\Desktop\\CODE\\VP\\江西2024邀请赛\\ac.cpp","group":"local","local":true}

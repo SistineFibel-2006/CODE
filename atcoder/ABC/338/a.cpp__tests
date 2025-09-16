@@ -1,0 +1,16 @@
+[
+	{
+		"correct_answers":
+		[
+			"KUPC"
+		],
+		"test": "Kyoto\n"
+	},
+	{
+		"correct_answers":
+		[
+			"TUPC"
+		],
+		"test": "Tohoku\n"
+	}
+]

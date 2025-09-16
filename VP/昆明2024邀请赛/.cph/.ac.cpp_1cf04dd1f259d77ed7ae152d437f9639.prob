@@ -1,0 +1,1 @@
+{"name":"Local: ac","url":"c:\\Users\\XK\\Desktop\\CODE\\VP\\昆明2024邀请赛\\ac.cpp","tests":[{"id":1742098316255,"input":"1\n5\n1 1 1\n0 0\n1 0\n5 0\n3 3\n0 5","output":"\n"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"c:\\Users\\XK\\Desktop\\CODE\\VP\\昆明2024邀请赛\\ac.cpp","group":"local","local":true}
