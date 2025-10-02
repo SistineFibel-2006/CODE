@@ -326,37 +326,24 @@ using I = int;
 namespace sIsTiNeFiBeL {
 
   inline void Tempest_Flare__The_Wind_Splitting_Magic_Bullet() {
-/**/I(n); I(x);
-  	auto a = getv(n);
-  	if(n <= 1) return(puts("0"));
-  	vi l(n), r(n);
-  	vector<bool> ok(n, 1), in(n, 0);
-  	F(i, 0, n)
-  		l[i] = (i - 1 + n) % n, r[i] = (i + 1) % n;
-		auto ck = [&](I i, I j){
-			return i != j && (a[i] == a[j] || a[i] + a[j] == x);
-		}  		;
-		
-		queue<I> q;
-		F(i, 0, n)
-			if(ck(i, r[i])) q.push(i), in[i] = 1;
+/**/I(n); I(xc); I(yc); I(xa); I(ya);
+  	vector<pii> a;
+  	F(i, 0, n) {
+  		I(x);I(y);I(x1);I(y1); //横走不晒太阳
+  		a.pb({y,y1});
+  	}
+  	if(yc <= ya) return(puts("0"));
+  	sort(a);
 
-		I ans = 0;
-		while(!q.empty()) {
-			I i = q.front(); q.pop(); in[i] = 0;
-			if(!ok[i]) continue;
-			I j = r[i];
-			if(!ok[j] || !ck(i, j)) continue;
-			ok[i] = ok[j] = 0;
-			ans ++;
-			// cerr << ok[i] << ' ';
-			I u = l[i], v = r[j];
-			r[u] = v, l[v] = u;
-			if(ok[u] && ok[v] &&
-				ck(u, v) && !in[u])
-				q.push(u), in[u] = 1;
-		}
-		cout << ans << el;
+  	I ans = 0, s = ya;
+  	for(auto [y0, y1] : a) {
+  		if(y0 > yc) break;
+  		if(s < y0) ans += y0 - s;
+  		s = s > y1 ? s : y1;
+  	}
+  	if(s < yc)
+  		ans += yc - s;
+  	cout << ans << el;
 return;};
 }
 

@@ -324,39 +324,48 @@ using I = int;
 #define el '\n'
 
 namespace sIsTiNeFiBeL {
+	const I N = 1e6 + 1;
+	I fa[N];
+	i64 x[N], y[N], z[N];
+	vi t, b;
+	int find(int x) {return fa[x] == x ? x : fa[x] = find(fa[x]);}
+	void unite(int a, int b) {
+		int f_a = find(a), fb = find(b);
+		if(f_a != fb) fa[f_a] = fb;
+	}
+	i64 dis2(int i, int j) {
+		i64 r = (x[i]-x[j]) * (x[i]-x[j]) +
+			(y[i]-y[j]) * (y[i]-y[j]) + 
+			(z[i]-z[j]) * (z[i]-z[j]);
+		return r;
+	}
 
   inline void Tempest_Flare__The_Wind_Splitting_Magic_Bullet() {
-/**/I(n); I(x);
-  	auto a = getv(n);
-  	if(n <= 1) return(puts("0"));
-  	vi l(n), r(n);
-  	vector<bool> ok(n, 1), in(n, 0);
-  	F(i, 0, n)
-  		l[i] = (i - 1 + n) % n, r[i] = (i + 1) % n;
-		auto ck = [&](I i, I j){
-			return i != j && (a[i] == a[j] || a[i] + a[j] == x);
-		}  		;
-		
-		queue<I> q;
-		F(i, 0, n)
-			if(ck(i, r[i])) q.push(i), in[i] = 1;
+/**/I(n); I(h); i64(r);
+  	
+  	//init
+  	F(i, 1, n + 1) fa[i] = i;
+  	t.clear(); b.clear();
 
-		I ans = 0;
-		while(!q.empty()) {
-			I i = q.front(); q.pop(); in[i] = 0;
-			if(!ok[i]) continue;
-			I j = r[i];
-			if(!ok[j] || !ck(i, j)) continue;
-			ok[i] = ok[j] = 0;
-			ans ++;
-			// cerr << ok[i] << ' ';
-			I u = l[i], v = r[j];
-			r[u] = v, l[v] = u;
-			if(ok[u] && ok[v] &&
-				ck(u, v) && !in[u])
-				q.push(u), in[u] = 1;
-		}
-		cout << ans << el;
+  	F(i, 0, n) {
+  		cin >> x[i] >> y[i] >> z[i];
+  		if(z[i] + r >= h) t.pb(i);
+  		if(z[i] - r <= 0) b.pb(i);
+
+  		F(j, 0, i)
+  			if(dis2(i, j) <= r * r * 4)
+  				unite(i, j);
+  	}
+
+  	bool ok = 0;
+  	for(auto c : t) {
+  		for(int v : b){
+  			if(find(c) == find(v)) {ok = 1; break;}
+  		}
+  		if(ok) break;
+  	}
+
+  	puts(ok?"Yes":"No");
 return;};
 }
 
@@ -368,7 +377,7 @@ signed main (){
     //FASTioMAGIC;
     RuntimeClock _;
     int t = 1;
-    // cin >> t;  //atc默认关闭，cf按需开启
+    cin >> t;  //atc默认关闭，cf按需开启
     while(t --)
         sIsTiNeFiBeL::Tempest_Flare__The_Wind_Splitting_Magic_Bullet();
     return 0;

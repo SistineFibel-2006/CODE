@@ -314,7 +314,7 @@ using namespace defs;
 #define se second
 #define in insert
 
-#define cin io
+// #define cin io
 
 const long long INF = 0x3f3f3f3f;
 const long long MOD = 1e9; //模数
@@ -325,38 +325,52 @@ using I = int;
 
 namespace sIsTiNeFiBeL {
 
-  inline void Tempest_Flare__The_Wind_Splitting_Magic_Bullet() {
-/**/I(n); I(x);
-  	auto a = getv(n);
-  	if(n <= 1) return(puts("0"));
-  	vi l(n), r(n);
-  	vector<bool> ok(n, 1), in(n, 0);
-  	F(i, 0, n)
-  		l[i] = (i - 1 + n) % n, r[i] = (i + 1) % n;
-		auto ck = [&](I i, I j){
-			return i != j && (a[i] == a[j] || a[i] + a[j] == x);
-		}  		;
-		
-		queue<I> q;
-		F(i, 0, n)
-			if(ck(i, r[i])) q.push(i), in[i] = 1;
+	/*
+		cnt (-1) >= N  YES;
+		x = a[i] + b[i];
+		sum(x) + cnt(-1) >= N; YES
 
-		I ans = 0;
-		while(!q.empty()) {
-			I i = q.front(); q.pop(); in[i] = 0;
-			if(!ok[i]) continue;
-			I j = r[i];
-			if(!ok[j] || !ck(i, j)) continue;
-			ok[i] = ok[j] = 0;
-			ans ++;
-			// cerr << ok[i] << ' ';
-			I u = l[i], v = r[j];
-			r[u] = v, l[v] = u;
-			if(ok[u] && ok[v] &&
-				ck(u, v) && !in[u])
-				q.push(u), in[u] = 1;
-		}
-		cout << ans << el;
+
+		O(n^2log(n))
+	*/
+
+  inline void Tempest_Flare__The_Wind_Splitting_Magic_Bullet() {
+
+/**/I(n);
+  	auto a = getv(n);
+  	auto b = getv(n);
+
+  	int ma = *max_element(all(a)), mb = *max_element(all(b));
+  	I mm = max(ma, mb);
+  	// cnt(-1)
+  	int cntf = 0;
+  	F(i, 0, n) {
+  		if(a[i] < 0) cntf ++;
+  		if(b[i] < 0) cntf ++;
+  	}
+  	if(cntf >= n) return(cout<<"Yes\n");
+
+  	// cnt(a + b)
+  	mapii cnta, cntb, cnts;
+  	for(auto c : a) if(c >= 0) cnta[c] ++;
+  	for(auto c : b) if(c >= 0) cntb[c] ++;
+
+  	for(auto [c, A] : cnta)
+  		for(auto [x, B] : cntb)
+  			cnts[c + x] += min(A, B);
+
+  	// sum(x) + cnt(-1) >= N; YES
+  	// cerr << "mm : " << mm << el;
+  	// cerr << "cntf : " << cntf << el;
+  	// for(auto [x, y] : cnts)
+  	// 	cerr << x << ' ' << y << '\n';
+
+  	for(auto [sum, cnt] : cnts) {
+  		if(sum >= mm && cnt + cntf >= n) return(cout<<"Yes\n");
+  	}
+
+  	cout<<"No\n";
+
 return;};
 }
 
@@ -365,7 +379,7 @@ struct RuntimeClock{std::chrono::high_resolution_clock::time_point s;RuntimeCloc
 
 #undef cin
 signed main (){
-    //FASTioMAGIC;
+    FASTioMAGIC;
     RuntimeClock _;
     int t = 1;
     // cin >> t;  //atc默认关闭，cf按需开启

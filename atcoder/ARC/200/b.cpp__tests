@@ -1,5 +1,9 @@
 [
 	{
-		"test": ""
+		"correct_answers":
+		[
+			"Yes\n2025 200\nNo\nYes\n20250615 200200"
+		],
+		"test": "3\n4 3 5\n1 1 7\n8 6 11\n"
 	}
 ]

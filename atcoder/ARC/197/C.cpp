@@ -325,38 +325,41 @@ using I = int;
 
 namespace sIsTiNeFiBeL {
 
-  inline void Tempest_Flare__The_Wind_Splitting_Magic_Bullet() {
-/**/I(n); I(x);
-  	auto a = getv(n);
-  	if(n <= 1) return(puts("0"));
-  	vi l(n), r(n);
-  	vector<bool> ok(n, 1), in(n, 0);
-  	F(i, 0, n)
-  		l[i] = (i - 1 + n) % n, r[i] = (i + 1) % n;
-		auto ck = [&](I i, I j){
-			return i != j && (a[i] == a[j] || a[i] + a[j] == x);
-		}  		;
-		
-		queue<I> q;
-		F(i, 0, n)
-			if(ck(i, r[i])) q.push(i), in[i] = 1;
+	const I N = 1 << 22;
+	I tr[N];
+	bool vis[N];
 
-		I ans = 0;
-		while(!q.empty()) {
-			I i = q.front(); q.pop(); in[i] = 0;
-			if(!ok[i]) continue;
-			I j = r[i];
-			if(!ok[j] || !ck(i, j)) continue;
-			ok[i] = ok[j] = 0;
-			ans ++;
-			// cerr << ok[i] << ' ';
-			I u = l[i], v = r[j];
-			r[u] = v, l[v] = u;
-			if(ok[u] && ok[v] &&
-				ck(u, v) && !in[u])
-				q.push(u), in[u] = 1;
+	void up(int i, int x) {
+		while(i < N) {
+			tr[i] += x;
+			i += i & -i;
 		}
-		cout << ans << el;
+	}
+
+	int qry(int k) {
+		I i = 0, sum = 0;
+		for(int b = 21; b >= 0; b --) {
+			int ni = i + (1 << b);
+			if(ni < N && sum + tr[ni] <= k) {
+				i = ni; sum += tr[ni];
+			}
+		}
+		return i + 1;
+	}
+
+  inline void Tempest_Flare__The_Wind_Splitting_Magic_Bullet() {
+/**/F(i, 1, N) {vis[i] = 1; up(i, 1);}
+  	I(Q);
+  	for(;Q --;) {
+  		I(a); I(b);
+  		if(a < N && vis[a]) {
+  			for(int i = a; i < N; i += a) {
+  				if(vis[i]) {vis[i] = 0; up(i, -1);}
+  			}
+  		}
+
+  		cout << qry(b - 1) << el;
+  	}
 return;};
 }
 
