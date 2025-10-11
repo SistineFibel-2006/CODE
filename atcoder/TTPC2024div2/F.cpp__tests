@@ -1,0 +1,9 @@
+[
+	{
+		"correct_answers":
+		[
+			"Yes\nNo\nYes"
+		],
+		"test": "3\n10\nETIOTROPIC\nEISCTROPIC\n6\nBTIEOT\nBISECT\n10\nTIOTIOTIOT\nTIOISCISCT\n"
+	}
+]

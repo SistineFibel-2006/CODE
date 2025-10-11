@@ -1,4 +1,5 @@
 #include <bits/stdc++.h>
+#include <functional>
 using namespace std;
 //#include "atcoder/all"
 
@@ -164,8 +165,27 @@ namespace sIsTiNeFiBeL {
 
 
   inline void Tempest_Flare__The_Wind_Splitting_Magic_Bullet() {
-/**/
-
+/**/INT(n,k);
+  	VEC(string, a, n);
+  	v<v<bool> > vis(n, v<bool>(k, 0));
+  	function<void(I,I)> dfs;
+  	dfs = [&](int x, int y) {
+  		// I dx[] = {-1, 0, 1, 0}, dy[] = {0, 1, 0, -1};
+  		vis[x][y] = 1;
+  		rep(i,4) {
+  			I nx = x + dx[i], ny = y + dy[i];
+  			if(nx >= 0 && nx < n && ny >= 0 && ny < k)
+  				if(!vis[nx][ny] && a[nx][ny] != '0')
+  					dfs(nx, ny);
+  		}
+  	};
+  	I ans = 0;
+  	rep(i, n) rep(j, k)
+  		if(!vis[i][j] && a[i][j] != '0'){
+  			dfs(i, j);
+  			ans ++;
+  		}
+  	out(ans);
 return;};
 }
 
@@ -175,7 +195,7 @@ signed main (){
     //FASTioMAGIC;
     RuntimeClock _;
     int t = 1;
-    in(t);  //atc默认关闭，cf按需开启
+    // in(t);  //atc默认关闭，cf按需开启
     while(t --)
         sIsTiNeFiBeL::Tempest_Flare__The_Wind_Splitting_Magic_Bullet();
     return 0;

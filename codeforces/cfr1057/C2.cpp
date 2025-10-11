@@ -164,7 +164,57 @@ namespace sIsTiNeFiBeL {
 
 
   inline void Tempest_Flare__The_Wind_Splitting_Magic_Bullet() {
-/**/
+/**/INT(n);
+  	map<I, I> m;
+  	rep(n) {
+  		INT(x); m[x] ++;
+  	}
+
+  	i64 s = 0;
+  	I mx = 0;
+  	I p = 0;
+  	vec(I, v, 0);
+
+  	each(k, c, m) {
+  		I t = c / 2;
+  		if(t > 0) {
+  			s += (i64)t * 2 * k;
+  			chmax(mx, k);
+  			p += t;
+  		}
+  		if(c % 2 == 1)
+  			v.pb(k);
+  	}
+  	sort(v.rbegin(), v.rend());
+  	i64 res = 0;
+
+  	if(p >= 2) {
+  		if((i64)2 * mx < s)
+  			chmax(res, s);
+  	}
+
+  	if(p >= 1) {
+  		each(c, v) {
+  			i64 cmx = max(mx, c);
+  			i64 per = s + c;
+  			if((i64)2 * cmx < per)
+  				chmax(res, per);
+  		}
+  	}
+
+  	if(p >= 1 && sz(v) >= 2) {
+  		rep(i, sz(v) - 1) {
+  			I a = v[i], b = v[i + 1];
+  			i64 cmx = max(mx, a);
+  			i64 per = s + a + b;
+  			if((i64)2 * cmx < per) {
+  				chmax(res, per);
+  				break;
+  			}
+  		}
+  	}
+
+  	out(res);
 
 return;};
 }
@@ -173,7 +223,7 @@ struct RuntimeClock{std::chrono::high_resolution_clock::time_point s;RuntimeCloc
 
 signed main (){
     //FASTioMAGIC;
-    RuntimeClock _;
+    // RuntimeClock _;
     int t = 1;
     in(t);  //atc默认关闭，cf按需开启
     while(t --)

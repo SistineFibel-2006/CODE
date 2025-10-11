@@ -1,6 +1,6 @@
 #include <bits/stdc++.h>
 using namespace std;
-//#include "atcoder/all"
+#include "atcoder/all"
 
 namespace atcoder{}
 using namespace atcoder;
@@ -164,7 +164,26 @@ namespace sIsTiNeFiBeL {
 
 
   inline void Tempest_Flare__The_Wind_Splitting_Magic_Bullet() {
-/**/
+/**/INT(n);
+  	vec(i64, a, n);
+  	fenwick_tree<int> tr(n);
+  	rep(i,n) {
+  		in(a[i]);
+  		tr.add(i, a[i]);
+  	}
+  	INT(Q);
+  	rep(Q) {
+  		INT(l,r,k);
+  		l --, r --;
+  		i64 ans = 0;
+  		rep(i,l,r+1,1){
+  			i64 x = min(a[i], (i64)k);
+  			a[i] -= x;
+  			tr.add(i, -x);
+  			ans += x;
+  		}
+  		out(ans);
+  	}
 
 return;};
 }
@@ -175,7 +194,7 @@ signed main (){
     //FASTioMAGIC;
     RuntimeClock _;
     int t = 1;
-    in(t);  //atc默认关闭，cf按需开启
+    // in(t);  //atc默认关闭，cf按需开启
     while(t --)
         sIsTiNeFiBeL::Tempest_Flare__The_Wind_Splitting_Magic_Bullet();
     return 0;

@@ -157,14 +157,61 @@ using namespace SistineFibel;
 #define is insert
 #define dbg debug
 
-
+#define ld long double
 #define el '\n'
 
 namespace sIsTiNeFiBeL {
 
+	struct P { ld x,y; };
+
+	inline P operator-(const P &a,const P &b){ return {a.x-b.x,a.y-b.y}; }
+	inline P operator+(const P &a,const P &b){ return {a.x+b.x,a.y+b.y}; }
+	inline P operator*(const P &a, ld k){ return {a.x*k,a.y*k}; }
+	inline ld dot(const P &a,const P &b){ return a.x*b.x + a.y*b.y; }
+	inline ld sqr(ld x){ return x*x; }
+
+	ld work(P dx, P dv, ld l, ld r) {
+		ld a = dot(dv, dv);
+		ld b = 2 * dot(dx,dv);
+		ld c = dot(dx,dx);
+		auto f = [&](ld t) {return a * t * t + b * t + c;};
+		ld ans = min(f(l),f(r));
+
+		if(a > 1e-18) {
+			ld t0 = - b / (2 * a);
+			if(t0 > l && t0 < r)
+				ans = min(ans, f(t0));
+		}
+		return ans;
+	}
 
   inline void Tempest_Flare__The_Wind_Splitting_Magic_Bullet() {
-/**/
+/**/P t1,t2,a1,a2;
+  	in(t1.x,t1.y,t2.x,t2.y);
+  	in(a1.x,a1.y,a2.x,a2.y);
+
+  	ld L1 = sqrt(sqr(t2.x-t1.x)+sqr(t2.y-t1.y));
+    ld L2 = sqrt(sqr(a2.x-a1.x)+sqr(a2.y-a1.y));
+		
+    P v1 = {(t2.x-t1.x)/L1, (t2.y-t1.y)/L1};
+    P v2 = {(a2.x-a1.x)/L2, (a2.y-a1.y)/L2};
+
+    ld dis = 1e300;
+  	ld et = min(L1, L2);
+
+  	P dx = t1 - a1, dv = v1 - v2;
+  	dis = min(dis, work(dx,dv,0,et));
+
+  	if(L1 < L2) {
+  		dx = t2 - a1;
+  		dv = {-v2.x, -v2.y};
+  		dis = min(dis, work(dx,dv,L1,L2));
+  	} elif (L2 < L1) {
+  		dx = t1 - a2;
+  		dv = v1;
+  		dis = min(dis, work(dx,dv,L2,L1));
+  	}
+  	out(sqrt(max((ld)0, dis)));
 
 return;};
 }

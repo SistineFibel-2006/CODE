@@ -162,9 +162,45 @@ using namespace SistineFibel;
 
 namespace sIsTiNeFiBeL {
 
+	// 思路，环形dp不可行，先断！
+	// 先朴素线性dp，求一开始的解！
+	// op 1: a[0] = a[n - 1]
+	// op 2: a[0] = a[n - 1] = a[n - 2]
+	// op 3: a[0] = a[1] = a[n - 1]
+
+	auto wk = [](ll a, ll b, ll c) {
+		return max({a,b,c}) - min({a,b,c});
+	};
 
   inline void Tempest_Flare__The_Wind_Splitting_Magic_Bullet() {
-/**/
+/**/auto solve = [&](v<ll> v) {
+  		I n = sz(v);
+  		if(n == 0) return 0LL;
+  		vec(ll, dp, n + 1, LINF);
+  		dp[0] = 0;
+  		rep(i, 1, n + 1) {
+  			if(i >= 2)
+  				dp[i] = min(dp[i], dp[i-2] + abs(v[i-1]-v[i-2]));
+  			if(i >= 3)
+  				dp[i] = min(dp[i], dp[i-3] + wk(v[i-3], v[i-2], v[i-1]));
+  		}
+  		return dp[n];
+  	};
+
+  	INT(n);
+  	VEC(ll, a, n);
+
+  	i64 ans = solve(a);
+
+  	if(n >= 2)
+  		ans = min(ans, solve(v<ll>(a.begin()+1,a.end()-1))+abs(a[0]-a[n-1]));
+
+  	if(n >= 3) {
+  		ans = min(ans, solve(n>3?v<ll>(a.begin()+1,a.end()-2):v<ll>())+wk(a[n-2],a[n-1],a[0]));
+  		ans = min(ans, solve(n>3?v<ll>(a.begin()+2,a.end()-1):v<ll>())+wk(a[n-1],a[0],a[1]));		
+  	}
+
+  	out(ans);
 
 return;};
 }
@@ -173,7 +209,7 @@ struct RuntimeClock{std::chrono::high_resolution_clock::time_point s;RuntimeCloc
 
 signed main (){
     //FASTioMAGIC;
-    RuntimeClock _;
+    // RuntimeClock _;
     int t = 1;
     in(t);  //atc默认关闭，cf按需开启
     while(t --)

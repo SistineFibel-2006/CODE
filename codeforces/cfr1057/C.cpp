@@ -164,7 +164,86 @@ namespace sIsTiNeFiBeL {
 
 
   inline void Tempest_Flare__The_Wind_Splitting_Magic_Bullet() {
-/**/
+/**/INT(n);
+  	VEC(i64, a, n);
+  	
+  	map<ll, I> cnt;
+  	each(c, a) cnt[c] ++;
+
+  	vec(i64, prs, 0);
+  	each(x, y, cnt) {
+  		I p = y / 2;
+  		rep(i, p)
+  			prs.pb(x);
+  	}
+  	if(prs.empty()) return(out(0));
+  	sor(prs);
+
+  	auto lst = cnt; //map
+  	I m = sz(prs);
+  	vec(i64, pref, m + 1, 0);
+  	rep(i,m)
+  		pref[i+1] = pref[i]+prs[i];
+
+  	ll best = 0;
+  	rep(k, 1, m + 1) {
+  		i64 len = prs[k - 1];
+  		lst[len] -= 2;
+  		if(lst[len] <= 0) lst.erase(len);
+
+  		i64 sump = pref[k];
+
+  		// odd 边， 
+  		if(k >= 2) {
+  			i64 mx = prs[0];
+  			i64 S = 2 * sump;
+  			if(mx < sump)
+  				chmax(best, S);
+  		}
+
+  		dbg(best);
+
+  		// even 边，1中心
+  		if(!lst.empty()) {
+  			i64 c = lst.rbegin()->fi;
+  			i64 S = 2 * sump + c;
+  			i64 mx = max(prs[0], c);
+  			if(2 * mx < S)
+  				chmax(best, S);
+  		}
+
+  		dbg(best);
+
+  		// even b, 2 op
+  		I lcnt = 0;
+  		each(_,y,lst)
+  			lcnt += y;
+  		if(lcnt >= 2) {
+  			i64 c1 = -1, c2 = -1;
+  			if(!lst.empty()) {
+  				auto it = lst.end(); it--;
+  				c1 = it->fi;
+  				if(it->se >= 2){
+  					c2 = c1;
+  				} else {
+  					if(it != lst.begin()) {
+  						auto it2 = it; it2 --;
+  						c2 = it2->fi;
+  					}
+  				}
+  			}
+  			if(c1 != -1 && c2 != -1) {
+  				i64 S = 2 * sump + c1 + c2;
+  				i64 mx = max({prs[0],c1,c2});
+  				if(2 * mx < S)
+  					chmax(best, S);
+  			}
+  		}
+
+  		dbg(best);
+  	}
+
+  	out(best);
 
 return;};
 }
@@ -173,7 +252,7 @@ struct RuntimeClock{std::chrono::high_resolution_clock::time_point s;RuntimeCloc
 
 signed main (){
     //FASTioMAGIC;
-    RuntimeClock _;
+    // RuntimeClock _;
     int t = 1;
     in(t);  //atc默认关闭，cf按需开启
     while(t --)

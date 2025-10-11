@@ -164,7 +164,9 @@ namespace sIsTiNeFiBeL {
 
 
   inline void Tempest_Flare__The_Wind_Splitting_Magic_Bullet() {
-/**/
+/**/INT(n, m);
+  	VEC(string, s, n);
+  	
 
 return;};
 }

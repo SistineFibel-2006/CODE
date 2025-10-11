@@ -1,4 +1,5 @@
 #include <bits/stdc++.h>
+#include <ranges>
 using namespace std;
 //#include "atcoder/all"
 
@@ -164,7 +165,22 @@ namespace sIsTiNeFiBeL {
 
 
   inline void Tempest_Flare__The_Wind_Splitting_Magic_Bullet() {
-/**/
+/**/INT(n, Q);
+  	vec(I, pc, n + 1); //记录每个版本上电脑的数量
+  	rep(i,0,n+1) pc[i] = 1;
+  	pc[0] = 0;
+  	I oldest = 1; //记录现在最老的版本的电脑对应的版本号
+  	rep(Q) {
+  		INT(x, y);
+  		i64 ans = 0;
+  		while(oldest <= x) { //如果当前最老版本号比X小，那么就需要升级
+  			ans += pc[oldest];
+  			pc[y] += pc[oldest];
+  			oldest ++;//当前版本就没有电脑了，所以最老的版本号上移
+  		}
+  		out(ans);
+  	}
+
 
 return;};
 }
@@ -175,7 +191,7 @@ signed main (){
     //FASTioMAGIC;
     RuntimeClock _;
     int t = 1;
-    in(t);  //atc默认关闭，cf按需开启
+    // in(t);  //atc默认关闭，cf按需开启
     while(t --)
         sIsTiNeFiBeL::Tempest_Flare__The_Wind_Splitting_Magic_Bullet();
     return 0;

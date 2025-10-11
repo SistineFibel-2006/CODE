@@ -162,9 +162,107 @@ using namespace SistineFibel;
 
 namespace sIsTiNeFiBeL {
 
+using int128 = __int128_t;
+
+ostream& operator<<(ostream& os, int128 val) {
+    if (!val) return os << "0";
+    string s;
+    bool neg = val < 0;
+    if (neg) val = -val;
+    while (val) {
+        s += '0' + (val % 10);
+        val /= 10;
+    }
+    if (neg) s += '-';
+    reverse(s.begin(), s.end());
+    return os << s;
+}
+
+struct Node {
+    int128 sum;
+    long long min_val, lazy;
+};
+
+
+int n;
+vector<Node> seg;
+vector<long long> a;
+
+
+void pull(int v) {
+    seg[v].sum = seg[v*2].sum + seg[v*2+1].sum;
+    seg[v].min_val = min(seg[v*2].min_val, seg[v*2+1].min_val);
+}
+
+void push(int v, int l, int r) {
+    if (!seg[v].lazy || l == r) return;
+    
+    long long lazy_val = seg[v].lazy;
+    int mid = (l + r) / 2;
+    
+    seg[v*2].min_val -= lazy_val;
+    seg[v*2].sum -= (int128)(mid - l + 1) * lazy_val;
+    seg[v*2].lazy += lazy_val;
+    
+    seg[v*2+1].min_val -= lazy_val;
+    seg[v*2+1].sum -= (int128)(r - mid) * lazy_val;
+    seg[v*2+1].lazy += lazy_val;
+    
+    seg[v].lazy = 0;
+}
+
+void build(int v, int l, int r) {
+    if (l == r) {
+        seg[v] = {(int128)a[l], a[l], 0};
+    } else {
+        int mid = (l + r) / 2;
+        build(v*2, l, mid);
+        build(v*2+1, mid+1, r);
+        pull(v);
+    }
+}
+
+int128 update(int v, int l, int r, int ql, int qr, long long k) {
+    push(v, l, r);
+    
+    if (r < ql || l > qr || !seg[v].sum) return 0;
+    
+    if (ql <= l && r <= qr && seg[v].min_val >= k) {
+        int128 bought = (int128)(r - l + 1) * k;
+        seg[v].sum -= bought;
+        seg[v].min_val -= k;
+        if (l != r) seg[v].lazy += k;
+        return bought;
+    }
+    
+    if (l == r) {
+        long long bought = (seg[v].sum<k?seg[v].sum:k);
+        seg[v].sum -= bought;
+        seg[v].min_val = seg[v].sum;
+        return bought;
+    }
+    
+    int mid = (l + r) / 2;
+    int128 bought = 0;
+    bought += update(v*2, l, mid, ql, qr, k);
+    bought += update(v*2+1, mid+1, r, ql, qr, k);
+    pull(v);
+    return bought;
+}
+
 
   inline void Tempest_Flare__The_Wind_Splitting_Magic_Bullet() {
-/**/
+/**/in(n); a.resize(n + 1);
+  	rep(i,1,n+1) in(a[i]);
+  	seg.resize(n * 4 + 4);
+  	build(1,1,n);
+
+  	INT(Q);
+  	rep(Q) {
+  		LL(l, r, k);
+  		int128 x = update(1,1,n,l,r,k);
+  		cout << x << '\n';
+  	}
 
 return;};
 }
@@ -175,7 +273,7 @@ signed main (){
     //FASTioMAGIC;
     RuntimeClock _;
     int t = 1;
-    in(t);  //atc默认关闭，cf按需开启
+    // in(t);  //atc默认关闭，cf按需开启
     while(t --)
         sIsTiNeFiBeL::Tempest_Flare__The_Wind_Splitting_Magic_Bullet();
     return 0;

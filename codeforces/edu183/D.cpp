@@ -162,9 +162,40 @@ using namespace SistineFibel;
 
 namespace sIsTiNeFiBeL {
 
+	i64 c2(i64 x) {
+		return x * (x - 1) / 2;
+	}
 
   inline void Tempest_Flare__The_Wind_Splitting_Magic_Bullet() {
-/**/
+/**/LL(n, k);
+  	I tot = c2(n);
+  	if(k < 0 || k > tot) return(out(0));
+  	i64 s = tot - k;
+  	I re = n;
+  	v<I> bl;
+  	while(re > 0) {
+  		I lo = 1, hi = re, best = 1;
+  		while(lo <= hi) {
+  			I mid = (lo + hi) / 2;
+  			if(c2(mid) <= s) {
+  				best = mid;
+  				lo = mid + 1;
+  			} else hi = mid - 1;
+  		}
+  		bl.pb(best);
+  		s -= c2(best);
+ 			re -= best;
+  	}
+  	if(s != 0) return(out(0));
+  	I cur = n;
+  	v<I> ans;
+  	each(L, bl) {
+  		I st = cur - L + 1;
+  		rep(x,st,cur+1)
+  			ans.pb(x);
+  		cur -= L;
+  	}
+  	out(ans);
 
 return;};
 }
@@ -173,7 +204,7 @@ struct RuntimeClock{std::chrono::high_resolution_clock::time_point s;RuntimeCloc
 
 signed main (){
     //FASTioMAGIC;
-    RuntimeClock _;
+    // RuntimeClock _;
     int t = 1;
     in(t);  //atc默认关闭，cf按需开启
     while(t --)

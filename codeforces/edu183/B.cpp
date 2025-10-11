@@ -163,10 +163,36 @@ using namespace SistineFibel;
 namespace sIsTiNeFiBeL {
 
 
-  inline void Tempest_Flare__The_Wind_Splitting_Magic_Bullet() {
-/**/
+inline void Tempest_Flare__The_Wind_Splitting_Magic_Bullet() {
+    /**/INT(n,k);STR(s);
+    I a = 0, b = 0;
+    each(e, s) {
+        if (e == '0') a++;
+        else if (e == '1') b++;
+    }
 
-return;};
+    if (k == n) {
+        out(string(n,'-'));
+        return;
+    }
+    dbg(a, b);
+
+    string ans(n, '?');
+    for (int i = 0; i < a && i < n; ++i) ans[i] = '-';
+    for (int i = 0; i < b && i < n; ++i) ans[n - 1 - i] = '-';
+    I l0 = k - b;
+    I r0 = n - k + a - 1;
+    if (l0 < 0) l0 = 0;
+    if (r0 >= n) r0 = n - 1;
+    if (l0 <= r0) {
+        rep(i, l0, r0 + 1) {
+            if (ans[i] == '-') continue;
+            ans[i] = '+';
+        }
+    }
+    out(ans);
+    return;
+}
 }
 
 struct RuntimeClock{std::chrono::high_resolution_clock::time_point s;RuntimeClock(){s=std::chrono::high_resolution_clock::now();}~RuntimeClock(){cerr<<"[Time] "<<std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now()-s).count()<<" ms\n";}};

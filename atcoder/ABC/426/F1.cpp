@@ -162,9 +162,50 @@ using namespace SistineFibel;
 
 namespace sIsTiNeFiBeL {
 
+	const int B = 600; // block
 
   inline void Tempest_Flare__The_Wind_Splitting_Magic_Bullet() {
-/**/
+/**/INT(n);
+  	VEC(i64, a, n);
+  	INT(Q);
+  	I m = (n + B - 1) / B;
+  	v<v<I>> block(m);
+  	rep(i, n) block[i / B].pb(i);
+
+  	rep(Q) {
+  		INT(l, r, k); l --; r --;
+  		i64 ans = 0;
+  		i64 bl = l / B, br = r / B;
+  		if(bl == br) {
+  			rep(i,l,r+1,1) {
+  				i64 x = min(a[i],(i64)k);
+  				a[i] -= x;
+  				ans += x;
+  			}
+  		} else { 
+  			//left
+  			rep(i, l, (bl + 1) * B, 1) {
+  				i64 x = min(a[i],(i64)k);
+  				a[i] -= x;
+  				ans += x;  				
+  			}
+ 				//mid
+ 				rep(b,bl+1,br) {
+ 					each(i, block[b]) {
+	  				i64 x = min(a[i],(i64)k);
+	  				a[i] -= x;
+	  				ans += x; 						
+ 					}
+ 				}
+ 				//right
+ 				rep(i,br*B,r+1,1) {
+  				i64 x = min(a[i],(i64)k);
+  				a[i] -= x;
+  				ans += x;  					
+ 				}
+  		}
+  		out(ans);
+  	}
 
 return;};
 }
@@ -175,7 +216,7 @@ signed main (){
     //FASTioMAGIC;
     RuntimeClock _;
     int t = 1;
-    in(t);  //atc默认关闭，cf按需开启
+    // in(t);  //atc默认关闭，cf按需开启
     while(t --)
         sIsTiNeFiBeL::Tempest_Flare__The_Wind_Splitting_Magic_Bullet();
     return 0;

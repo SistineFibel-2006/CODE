@@ -164,7 +164,28 @@ namespace sIsTiNeFiBeL {
 
 
   inline void Tempest_Flare__The_Wind_Splitting_Magic_Bullet() {
-/**/
+/**/INT(n);
+  	VEC(I, a, n);
+  	// vec(I, ans, n);
+  	// rep(i, n)
+  	// 	ans[i] = a[i];
+  	map<int,int> mp;
+  	each(e, a) {
+  		mp[e] ++;
+  		if(mp[e] >= 2) {
+  			out("No");
+  			return;
+  		}
+  	}
+  	out("Yes");
+  	I j = 1;
+  	rep(i, 1, n+ 1, 1) {
+  		if(a[i] == -1) {
+  			while(mp[j]) j ++;
+  			mp[a[i]]
+  		}
+  		j ++;
+  	}
 
 return;};
 }
@@ -175,7 +196,7 @@ signed main (){
     //FASTioMAGIC;
     RuntimeClock _;
     int t = 1;
-    in(t);  //atc默认关闭，cf按需开启
+    // in(t);  //atc默认关闭，cf按需开启
     while(t --)
         sIsTiNeFiBeL::Tempest_Flare__The_Wind_Splitting_Magic_Bullet();
     return 0;

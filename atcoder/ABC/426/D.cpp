@@ -164,7 +164,55 @@ namespace sIsTiNeFiBeL {
 
 
   inline void Tempest_Flare__The_Wind_Splitting_Magic_Bullet() {
-/**/
+// /**/INT(n);
+//   	STR(a);
+//   	auto cnt = [&](char c) -> i64{
+//   		i64 ans = n + count(a, c);
+//   		for(int i = 0; i < n;) {
+//   			if(a[i] == c) {
+//   				int j = i;
+//   				while(j < n && a[j] == c) j ++;
+//   				i64 a1 = i, a2 = n - j;
+//   				i64 a3 = count(a.begin(), a.begin() + i, c);
+//   				i64 a4 = count(a.begin() + j, a.end(), c);
+//   				ans = min(ans, a1+a2+a3+a4);
+//   				i = j ;
+//   			} else {i ++;}
+//   		}
+//   		return ans;
+//   	};
+
+//   	out(min(cnt('0'), cnt('1')));
+  	INT(n); STR(s);
+  	vec(I, pre0, n + 1);
+  	vec(I, pre1, n + 1);
+  	rep(i,0,n){
+  		pre0[i + 1] = pre0[i] + (s[i] == '0');
+  		pre1[i + 1] = pre1[i] + (s[i] == '1');
+  	}
+  	I cnt0 = pre0[n], cnt1 = pre1[n];
+  	if(cnt0 == 0 || cnt1 == 0) {
+  		out(0);
+  		return;
+  	}
+
+  	i64 ans0 = n + cnt0, ans1 = n + cnt1;
+  	I i = 0;
+  	while(i < n) {
+  		char ch = s[i];
+  		I j = i;
+  		while(j < n && s[j] == ch) j ++;
+  		I L = j - i;
+  		if(ch == '0') {
+  			i64 cst = i+(n-j)+pre0[i]+(cnt0-pre0[j]);
+  			ans0 = min(ans0, cst);
+  		} else {
+  			i64 cst = i+(n-j)+pre1[i]+(cnt1-pre1[j]);
+  			ans1 = min(ans1, cst);  			
+  		}
+  		i = j;
+  	}
+  	out(min(ans1,ans0));
 
 return;};
 }

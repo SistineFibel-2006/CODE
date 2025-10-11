@@ -8,7 +8,7 @@ using namespace atcoder;
 
 namespace SistineFibel{
     // #define all(x) (x).begin(),(x).end()
-    #define return(statement) return (statement),void();
+    // #define return(statement) return (statement),void();
     // bool YON(bool a,bool upp=false){if(a){std::cout<<(upp?"YES\n":"Yes\n");}else{std::cout<<(upp?"NO\n":"No\n");}return a;}
     using ll = long long;
     using ld = long double;
@@ -162,9 +162,41 @@ using namespace SistineFibel;
 
 namespace sIsTiNeFiBeL {
 
+	const I N = 1e6 + 5;
+	I fa[N];
+	i64 cnt[N];
 
   inline void Tempest_Flare__The_Wind_Splitting_Magic_Bullet() {
-/**/
+/**/int n, q; cin >> n >> q;
+  	// cerr << 1 << endl;
+  	rep(i,0,n+1){fa[i]=i;cnt[i]=1;}
+  	rep(i,1,n+1) cnt[i] = 1;
+  	cnt[0] = 0; fa[0] = 0;
+    auto find = [&](int x) {
+        int r = x;
+        while (r >= 0 && fa[r] != r) r = fa[r];
+        while (x != r) {
+            int p = fa[x];
+            fa[x] = r;
+            x = p;
+        }
+        return r;
+    };
+
+  	while(q--){
+  		// out("1");
+  		INT(x,y);
+  		i64 ans = 0;
+  		I v = find(x);
+  		while(v > 0) {
+  			ans += cnt[v];
+  			cnt[v] = 0;
+  			fa[v] = find(v - 1);
+  			v = fa[v];
+  		}
+  		cnt[find(y)] += ans;
+  		out(ans);
+  	}
 
 return;};
 }
@@ -173,9 +205,9 @@ struct RuntimeClock{std::chrono::high_resolution_clock::time_point s;RuntimeCloc
 
 signed main (){
     //FASTioMAGIC;
-    RuntimeClock _;
+    // RuntimeClock _;
     int t = 1;
-    in(t);  //atc默认关闭，cf按需开启
+    // in(t);  //atc默认关闭，cf按需开启
     while(t --)
         sIsTiNeFiBeL::Tempest_Flare__The_Wind_Splitting_Magic_Bullet();
     return 0;

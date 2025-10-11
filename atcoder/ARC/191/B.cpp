@@ -162,9 +162,24 @@ using namespace SistineFibel;
 
 namespace sIsTiNeFiBeL {
 
+	// x xor n == x % n
 
   inline void Tempest_Flare__The_Wind_Splitting_Magic_Bullet() {
-/**/
+/**/INT(n, k);
+  	auto work = [](int x) {
+  		return 32 - __builtin_clz(x);
+  	};
+  	I base = ((1 << work(n)) - 1) ^ n;
+  	if((1 << popcnt(base)) < k) return(out(-1));
+  	k --;
+  	rep(i,31) {
+  		if(base & (1 << i)) {
+  			if(!(k % 2)) base ^= 1 << i;
+  			k >>= 1;
+  		}
+  	}
+  	if(k) out(-1);
+  	else out(base ^ n);
 
 return;};
 }

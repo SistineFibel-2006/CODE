@@ -151,31 +151,73 @@ namespace SistineFibel{
 } //NAMESPCACE SistineFibel
 using namespace SistineFibel;
 
+#define F(i, a, n) for(size_t i = (a); (i) < (n); (i) ++)
+#define Fd(i, a, n) for(size_t  i = (a); (i) <= (n); (i) ++)
+#define F_(i, a, n) for(size_t  i = (a); (i) > (n); (i) --)
+#define F_d(i, a, n) for(size_t  i = (a); (i) >= (n); (i) --)
+
 #define pb push_back
 #define fi first
 #define se second
-#define is insert
-#define dbg debug
+// #define in insert
 
 
+const long long INF = 0x3f3f3f3f;
+const long long MOD = 1e9; //模数
+// const long long MOD = 998244353;
+
+using I = int;
 #define el '\n'
 
 namespace sIsTiNeFiBeL {
-
-
   inline void Tempest_Flare__The_Wind_Splitting_Magic_Bullet() {
-/**/
+// /**/I(n);I(m);I(p);I(x);I(a);I(b);I(c);
+    INT(n,m,p,x,a,b,c);
+  	v<i64> s(n), t(m);
+  	F(i, 0, n) {
+  		x = (a * x % p * x % p + b * x % p + c) % p;
+  		s[i] = x;
+  	}
+  	F(i, 0, m) {
+  		x = (a * x % p * x % p + b * x % p + c) % p;
+  		t[i] = x;
+  	}
 
+  	unordered_map<i64, v<I>> pos;
+  	pos.reserve(2 * n);
+  	F(i, 0, n)
+  		pos[s[i]].pb(i);
+
+  	v<I> sq;
+  	sq.reserve(min(n, m));
+
+  	F(i, 0, m) if(pos.count(t[i])) {
+  		for(int k = pos[t[i]].size() - 1; k >= 0; k --)
+  			sq.pb(pos[t[i]][k]);
+  	}
+
+  	v<I> lis;
+  	for(auto x : sq) {
+  		auto f = lower_bound(all(lis), x);
+  		if(f == lis.end()) lis.pb(x);
+  		else *f = x;
+  	}
+
+    // print(lis);
+
+  	cout << lis.size() << el;
 return;};
 }
 
 struct RuntimeClock{std::chrono::high_resolution_clock::time_point s;RuntimeClock(){s=std::chrono::high_resolution_clock::now();}~RuntimeClock(){cerr<<"[Time] "<<std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now()-s).count()<<" ms\n";}};
 
+
+#undef cin
 signed main (){
     //FASTioMAGIC;
     RuntimeClock _;
     int t = 1;
-    in(t);  //atc默认关闭，cf按需开启
+    cin >> t;  //atc默认关闭，cf按需开启
     while(t --)
         sIsTiNeFiBeL::Tempest_Flare__The_Wind_Splitting_Magic_Bullet();
     return 0;
@@ -209,5 +251,5 @@ About implementation skills:
 
 
 //============================================================================//
-//==                        SISTINE_FIBEL  システィーナ=フィーベル            ==//
+//==            POWERED BY     SISTINE_FIBEL  システィーナ=フィーベル         ==//
 //============================================================================//

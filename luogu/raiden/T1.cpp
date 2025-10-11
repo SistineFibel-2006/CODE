@@ -162,9 +162,50 @@ using namespace SistineFibel;
 
 namespace sIsTiNeFiBeL {
 
+	/*
+		k < n :
+			f(n, k) = 2 ^ (k - 1) * (n - k)! * (n - k - 1)
+		k == n:
+			f(n, n) = 2 ^ (n - 1)
+		k == n - 1
+			0
+	*/
+
+	const int M = MODD;
+	const int N = 1e6;
+	i64 fac[N + 5], ifac[N + 5], p[N + 5];
+
+	i64 mpow(i64 a, i64 b) {
+		return modpow(a,b,M);
+	}
+
+	i64 C(I n, I k) {
+		if(k > n || k < 0) return 0;
+		return fac[n]*ifac[k]%M*ifac[n-k]%M;
+	}
 
   inline void Tempest_Flare__The_Wind_Splitting_Magic_Bullet() {
-/**/
+/**/fac[0] = 1;
+  	rep(i,1,N+1) fac[i]=fac[i-1]*i%M;
+  	p[0] = 1;
+  	rep(i,1,N+1) p[i]=(p[i-1]*2)%M;
+
+  	INT(T);rep(T){
+  		INT(n,k);
+  		if(k==n) {
+  			(out(p[n-1]%M));
+  			continue;
+  		} 
+  		I nk = n - k, nk1 = nk - 1;
+  		if(nk1 < 0) {
+  			out(0);
+  			continue;
+  		}
+  		i64 ans = p[max(0, k-1)];
+  		ans = ans * fac[nk] % M;
+  		ans = ans * (i64)nk1 % M;
+  		out(ans);
+  	}
 
 return;};
 }
@@ -175,7 +216,7 @@ signed main (){
     //FASTioMAGIC;
     RuntimeClock _;
     int t = 1;
-    in(t);  //atc默认关闭，cf按需开启
+    // in(t);  //atc默认关闭，cf按需开启
     while(t --)
         sIsTiNeFiBeL::Tempest_Flare__The_Wind_Splitting_Magic_Bullet();
     return 0;

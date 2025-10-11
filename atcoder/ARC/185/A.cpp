@@ -164,7 +164,10 @@ namespace sIsTiNeFiBeL {
 
 
   inline void Tempest_Flare__The_Wind_Splitting_Magic_Bullet() {
-/**/
+/**/LL(n, m);
+  	i64 sum = n * (n + 1);
+  	if(((sum%m)>0)&&((sum%m)<=n)||m==1)out("Bob");
+  	else out("Alice");
 
 return;};
 }

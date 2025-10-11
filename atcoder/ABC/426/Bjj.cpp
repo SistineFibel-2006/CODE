@@ -162,9 +162,29 @@ using namespace SistineFibel;
 
 namespace sIsTiNeFiBeL {
 
+	// string a  {length[3, 10]}
+	// a 属于 {x , y};
+	// x , y => 1
 
   inline void Tempest_Flare__The_Wind_Splitting_Magic_Bullet() {
-/**/
+/**/char a[10];
+  	in(a);
+  	// strlen(a)
+  	char x = a[0], y; 
+  	int cntx = 0, cnty = 0; //count x
+  	for(int i = 1; i < strlen(a); i ++) {
+  		if(a[i] == x){
+  			cntx ++;
+  		}
+  		else {
+  			y = a[i];
+  			cnty ++;
+  		}
+  	}
+  	if(cntx == 1)
+  		out(x);
+  	else
+  		out(y);
 
 return;};
 }
@@ -175,7 +195,7 @@ signed main (){
     //FASTioMAGIC;
     RuntimeClock _;
     int t = 1;
-    in(t);  //atc默认关闭，cf按需开启
+    // in(t);  //atc默认关闭，cf按需开启
     while(t --)
         sIsTiNeFiBeL::Tempest_Flare__The_Wind_Splitting_Magic_Bullet();
     return 0;
