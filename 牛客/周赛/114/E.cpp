@@ -162,6 +162,8 @@ using namespace SistineFibel;
 
 namespace sIsTiNeFiBeL {
 
+//  l = a + 2;
+//  
 
   inline void Tempest_Flare__The_Wind_Splitting_Magic_Bullet() {
 /**/

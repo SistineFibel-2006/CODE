@@ -1,0 +1,68 @@
+name: Verify library & Generate documentation
+
+on:
+  push:
+    branches:
+    - main
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.x'
+        cache: 'pip'
+    
+    - name: Install dependencies
+      run: |
+        pip install -U pip
+        pip install -r requirements.txt
+
+    - run: oj-verify all
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GH_PAT: this_token_is_never_used_but_oj_verify_requires_this
+
+    - run: git switch main
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 'latest'
+        cache: 'npm'
+
+    - name: Install Vivliostyle
+      run: npm install -g @vivliostyle/cli clang-format
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Build PDF
+      run: make build
+    
+    - name: commit PDF
+      run: git add . && git commit -m "[skip actions] build PDF" && git push
+
+    - name: copy to gh-pages
+      run: |
+        DIR=$(mktemp -d)
+        cp notebook.pdf $DIR
+        cp build/*.css $DIR
+        cp build/*.html $DIR
+        git clean -dfx
+        git switch gh-pages
+        cp $DIR/* .
+        git add . && git commit -m "build PDF" && git push
+        git switch main
