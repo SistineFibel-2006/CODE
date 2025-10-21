@@ -2,6 +2,7 @@
 using namespace std;
 using ll = long long;
 const ll INF = LLONG_MAX / 4;
+const ll LINF = LLONG_MAX / 4;
 #define rep(i, a, b) for(ll i = a; i < (b); i++)
 #define all(a) begin(a), end(a)
 #define sz(a) ssize(a)
