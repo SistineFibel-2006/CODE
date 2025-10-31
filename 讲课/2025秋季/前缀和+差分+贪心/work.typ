@@ -304,5 +304,101 @@ int main() {
 
 
 #text(size:1.8em)[
-  
+  考虑贪心，如果没有$x_i$,$y_i$的限制，那么直接选取前$z_i$大的牌是最优的。\
+        因为$z_i<=x_i+y_i$，可以看出此时的解只有两种不合法情况，即$a$超出$x_i$，或$b$超出$y_i$，二者不会同时满足。\ 
+        对于超出的部分，我们用另一种卡替代。\ 
+        可以证明这是最优的情况，因为对于两组卡牌，我们都选取了尽可能多且大的牌。\
+        我们可以通过排序前缀和统计出前$i$大$a$，$b$牌组的贡献和选了前$i$大的总牌数属于$a$，$b$的数量来求出答案。
+]
+#text(size:1.2em)[
+  ```cpp
+int a[N],b[N],cnta[N<<1],cntb[N<<1],s[N<<1],sa[N],sb[N];
+void solve(){
+    int n,m,q;
+    cin>>n>>m>>q;
+    vector<pair<int,int>>c;
+    c.push_back({0,0});
+    for(int i=1;i<=n;i++) cin>>a[i],c.push_back({a[i],1});
+    for(int i=1;i<=m;i++) cin>>b[i],c.push_back({b[i],2});
+    sort(a+1,a+1+n,greater<int>()),sort(b+1,b+1+m,greater<int>());
+    sort(c.begin()+1,c.end(),greater<pair<int,int>>());
+    for(int i=1;i<=n;i++) sa[i]=sa[i-1]+a[i];
+    for(int i=1;i<=m;i++) sb[i]=sb[i-1]+b[i];
+    for(int i=1;i<=n+m;i++){
+        cnta[i]=cnta[i-1]+(c[i].second==1);
+        cntb[i]=cntb[i-1]+(c[i].second==2);
+        s[i]=s[i-1]+c[i].first;
+    }
+    while(q--){
+        int x,y,z;
+        cin>>x>>y>>z;
+        if(cnta[z]<=x&&cntb[z]<=y){
+            cout<<s[z]<<"\n";
+            continue;
+        }
+        if(cnta[z]>x) cout<<sa[x]+sb[min(z-x,m)]<<"\n";
+        if(cntb[z]>y) cout<<sa[min(z-y,n)]+sb[y]<<"\n";
+    }
+    for(int i=1;i<=n;i++) a[i]=sa[i]=0;
+    for(int i=1;i<=m;i++) b[i]=sb[i]=0;
+    for(int i=1;i<=n+m;i++) cnta[i]=cntb[i]=s[i]=0;
+}
+  ```
+
+]
+#text(size:1.8em)[
+  让我们再来看一道题\
+  洛谷 P2949 [USACO09OPEN] Work Scheduling G \
+  https://www.luogu.com.cn/problem/P2949
+]
+#pagebreak()
+
+#text(size:1.2em)[
+  ```cpp
+using PII = pair<int,int>;
+void solve(){
+    int n, ans = 0;cin >> n;
+    vector<PII>arr(n);
+    for(auto &[x,y] : arr)
+        cin >> x >> y;
+    sort(arr.begin(),arr.end());
+    priority_queue<int,vector<int>,greater<int>>pq;
+    for(auto [x,y] : arr){
+        if(pq.size() < x){
+            pq.push(y);
+            ans += y;
+            continue;
+        }
+        if(pq.size() >= x){
+            if(pq.top() < y){
+                ans += y;
+                ans -= pq.top();  pq.pop();
+                pq.push(y);
+            }
+        }
+    }
+    cout << ans << endl;
+}
+  ```
+]
+
+#pagebreak()
+
+
+#text(size:1.8em)[
+  那么，以上就是今天的培训内容了，但是我还是想带同学们一起做一道思维题！\
+  yukicoder No.3287 Golden Ring （黄金之环）\
+  https://yukicoder.me/problems/no/3287\
+  #box(fill: luma(230), inset : 4pt, radius : 20pt)[
+    对于排列在圆环上的长度大于等于 
+2 的数组，若“任意相邻元素之和都不存在相同的情况”，则将其定义为"黄金环"。\ 
+    也就是说，满足以下所有条件的数组 
+A 即为"黄金环"。
+    + $2<=N$
+    + A是长度为$N$的数组
+    + $S_i=A_i+A_(i+1) quad (1<=i<=N-1)$
+    + $S_N=A_N+A_1$
+    + 如果$i!=j$则$S_i!=S_j$
+    给定一个数$N$，从$1$到$N$的数组$(1,2,...,N)$已经给出，请你判断这个数组是否可以通过自由重排该数组来形成"黄金环"。如果可以输出这个"黄金环"数组！
+  ]
 ]
