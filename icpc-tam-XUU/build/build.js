@@ -1,5 +1,5 @@
 const title = "ICPC Notebook";  // タイトル (先頭に表示)
-const teamname = "Sistine/ICPC_notebook -- copy from tatyam";   // チーム名 + 大学名 (各ページ左上に表示)
+const teamname = "XUUUUUUuuUUU";   // チーム名 + 大学名 (各ページ左上に表示)
 const fontsize = "7.4pt";       // フォントサイズ
 const orientation = "landscape";     // portrait (縦長) / landscape (横長)
 const num_columns = 2;          // 何段組みか
