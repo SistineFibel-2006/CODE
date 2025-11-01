@@ -16,11 +16,11 @@ nav#toc {
     }
 
     @page {
-        size: A4 landscape;
+        size: A4 portrait;
 
         /* ヘッダー */
         @top-left {
-            content: "Sistine/ICPC_notebook -- copy from tatyam";
+            content: "tatyam/ICPC_notebook";
         }
     }
 }
