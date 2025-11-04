@@ -97,7 +97,7 @@ namespace SistineFibel{
     template<class... Ts> void out(const Ts&... ts){ print(ts...); cout << '\n'; }
     namespace IO{
     #define VOID(a) decltype(void(a))
-    struct S{ S(){ cin.tie(nullptr)->sync_with_stdio(0); fixed(cout).precision(2); } }S;
+    struct S{ S(){ cin.tie(nullptr)->sync_with_stdio(0); fixed(cout).precision(12); } }S;
     template<int I> struct P : P<I-1>{};
     template<> struct P<0>{};
     template<class T> void i(T& t){ i(t, P<3>{}); }
@@ -162,40 +162,36 @@ using namespace SistineFibel;
 
 namespace sIsTiNeFiBeL {
 
+auto KMP(string s) {
+   vector<ll> p(sz(s));
+   rep(i, 1, sz(s)) {
+      ll g = p[i - 1];
+      while(g && s[i] != s[g]) g = p[g - 1];
+      p[i] = g + (s[i] == s[g]);
+   }
+   return p;
+}
+
 
   inline void Tempest_Flare__The_Wind_Splitting_Magic_Bullet() {
-/**/INT(n);
-  	VEC(pdd, p, n);
-  	vv(double, d, n, n);
-  	rep(i,n) rep(j, n) {
-  		double dx = p[i].fi - p[j].fi;
-  		double dy = p[i].se - p[j].se;
-  		d[i][j] = sqrt(dx*dx+dy*dy);
-  	}
-  	vec(double,d0,n);
-  	rep(i,n) {
-  		double dx = p[i].fi;
-  		double dy = p[i].se;
-  		d0[i] = sqrt(dx*dx+dy*dy);	
-  	}
-  	I s = 1 << n;
-  	vv(double,dp,s,n,LINF);
-  	rep(i,n) dp[1<<i][i] = d0[i];
-
-  	rep(b,s) rep(i,n) if(b & (1 << i)) {
-  		double now = dp[b][i];
-  		if(now >= LINF) continue;
-  		rep(j, n) if(!(b & (1 << j))) {
-  			I t = b | (1 << j);
-  			dp[t][j] = min(dp[t][j], now + d[i][j]);
+/**/STR(a,b);
+  	I n = sz(a);
+  	if(sz(b) != n) return(out(-1));
+  	if(a==b) return(out(0));
+  	if(count(all(a),'1')!=count(all(b),'1')) return(out(-1));
+  	string s = a + a;
+  	auto p = KMP(b);
+  	I j = 0, ans = -1;
+  	rep(i,sz(s)) {
+  		while(j > 0 && s[i] != b[j]) j = p[j - 1];
+  		if(s[i]==b[j])j++;
+  		if(j == n) {
+  			I pos = i - n + 1;
+  			if(pos < n) {ans = pos; break;}
+  			j = p[j - 1];
   		}
   	}
-
-  	double ans = LINF;
-  	each(c, dp[s - 1])
-  		chmin(ans, c);
   	out(ans);
-
 return;};
 }
 
@@ -204,8 +200,12 @@ struct RuntimeClock{std::chrono::high_resolution_clock::time_point s;RuntimeCloc
 signed main (){
     //FASTioMAGIC;
     //RuntimeClock _;
+    // std::ifstream in("E.in");
+    // std::ofstream out("E.out");
+    // // std::cin.rdbuf(in.rdbuf());
+    // std::cout.rdbuf(out.rdbuf());
     int t = 1;
-    //in(t);  //atc默认关闭，cf按需开启
+    in(t);  //atc默认关闭，cf按需开启
     while(t --)
         sIsTiNeFiBeL::Tempest_Flare__The_Wind_Splitting_Magic_Bullet();
     return 0;

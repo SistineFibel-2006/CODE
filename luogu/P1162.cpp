@@ -97,7 +97,7 @@ namespace SistineFibel{
     template<class... Ts> void out(const Ts&... ts){ print(ts...); cout << '\n'; }
     namespace IO{
     #define VOID(a) decltype(void(a))
-    struct S{ S(){ cin.tie(nullptr)->sync_with_stdio(0); fixed(cout).precision(2); } }S;
+    struct S{ S(){ cin.tie(nullptr)->sync_with_stdio(0); fixed(cout).precision(12); } }S;
     template<int I> struct P : P<I-1>{};
     template<> struct P<0>{};
     template<class T> void i(T& t){ i(t, P<3>{}); }
@@ -165,36 +165,36 @@ namespace sIsTiNeFiBeL {
 
   inline void Tempest_Flare__The_Wind_Splitting_Magic_Bullet() {
 /**/INT(n);
-  	VEC(pdd, p, n);
-  	vv(double, d, n, n);
-  	rep(i,n) rep(j, n) {
-  		double dx = p[i].fi - p[j].fi;
-  		double dy = p[i].se - p[j].se;
-  		d[i][j] = sqrt(dx*dx+dy*dy);
-  	}
-  	vec(double,d0,n);
-  	rep(i,n) {
-  		double dx = p[i].fi;
-  		double dy = p[i].se;
-  		d0[i] = sqrt(dx*dx+dy*dy);	
-  	}
-  	I s = 1 << n;
-  	vv(double,dp,s,n,LINF);
-  	rep(i,n) dp[1<<i][i] = d0[i];
-
-  	rep(b,s) rep(i,n) if(b & (1 << i)) {
-  		double now = dp[b][i];
-  		if(now >= LINF) continue;
-  		rep(j, n) if(!(b & (1 << j))) {
-  			I t = b | (1 << j);
-  			dp[t][j] = min(dp[t][j], now + d[i][j]);
+  	VV(I,a,n,n);
+  	vv(I,vis,n,n);
+  	auto bfs = [&](int x, int y) {
+  		queue<pii> q;
+  		q.push({x,y});
+  		while(!q.empty()) {
+  			auto [xx,yy] = q.front(); q.pop();
+  			rep(k,4) {
+  				I nx = xx + dx[k], ny = yy + dy[k];
+  				if(nx>=0&&nx<n&&ny>=0&&ny<n&&!vis[nx][ny]&&!a[nx][ny]) {
+  					vis[nx][ny] = 1;
+  					q.push({nx,ny});
+  				}
+  			}
   		}
+  	};
+
+  	rep(i,n) {
+  		if(!a[i][0]) bfs(i,0);
+  		if(!a[i][n-1]) bfs(i,n-1);
+  		if(!a[0][i]) bfs(0,i);
+  		if(!a[n-1][i]) bfs(n-1,i);
   	}
 
-  	double ans = LINF;
-  	each(c, dp[s - 1])
-  		chmin(ans, c);
-  	out(ans);
+  	rep(i,n) {
+  		rep(j,n)
+  			if(!a[i][j] && !vis[i][j]) a[i][j] = 2;
+  		out(a[i]);
+  	}
+
 
 return;};
 }

@@ -97,7 +97,7 @@ namespace SistineFibel{
     template<class... Ts> void out(const Ts&... ts){ print(ts...); cout << '\n'; }
     namespace IO{
     #define VOID(a) decltype(void(a))
-    struct S{ S(){ cin.tie(nullptr)->sync_with_stdio(0); fixed(cout).precision(2); } }S;
+    struct S{ S(){ cin.tie(nullptr)->sync_with_stdio(0); fixed(cout).precision(12); } }S;
     template<int I> struct P : P<I-1>{};
     template<> struct P<0>{};
     template<class T> void i(T& t){ i(t, P<3>{}); }
@@ -164,37 +164,25 @@ namespace sIsTiNeFiBeL {
 
 
   inline void Tempest_Flare__The_Wind_Splitting_Magic_Bullet() {
-/**/INT(n);
-  	VEC(pdd, p, n);
-  	vv(double, d, n, n);
-  	rep(i,n) rep(j, n) {
-  		double dx = p[i].fi - p[j].fi;
-  		double dy = p[i].se - p[j].se;
-  		d[i][j] = sqrt(dx*dx+dy*dy);
-  	}
-  	vec(double,d0,n);
-  	rep(i,n) {
-  		double dx = p[i].fi;
-  		double dy = p[i].se;
-  		d0[i] = sqrt(dx*dx+dy*dy);	
-  	}
-  	I s = 1 << n;
-  	vv(double,dp,s,n,LINF);
-  	rep(i,n) dp[1<<i][i] = d0[i];
-
-  	rep(b,s) rep(i,n) if(b & (1 << i)) {
-  		double now = dp[b][i];
-  		if(now >= LINF) continue;
-  		rep(j, n) if(!(b & (1 << j))) {
-  			I t = b | (1 << j);
-  			dp[t][j] = min(dp[t][j], now + d[i][j]);
-  		}
-  	}
-
-  	double ans = LINF;
-  	each(c, dp[s - 1])
-  		chmin(ans, c);
-  	out(ans);
+/**/INT(N);
+    vv(I,a,N,N);
+    rep(i,N) rep(j,N) {
+      CHR(x);
+      if(x == 'o') a[i][j] = 0;
+      else a[i][j] = 1;
+    }
+    vec(I,c,N); vec(I,l,N);
+    rep(i,N) {
+      rep(j,N)
+        c[i] += a[i][j];
+      if(c[i] == 0 || c[i] == N) return(Yes());
+    }
+    rep(i,N) {
+      rep(j,N)
+        l[i] += a[j][i];
+      if(l[i] == 0 || l[i] == N) return(Yes());
+    }
+    No();
 
 return;};
 }
@@ -203,41 +191,16 @@ struct RuntimeClock{std::chrono::high_resolution_clock::time_point s;RuntimeCloc
 
 signed main (){
     //FASTioMAGIC;
-    //RuntimeClock _;
+    RuntimeClock _;
     int t = 1;
-    //in(t);  //atc默认关闭，cf按需开启
+    // in(t);  //atcĬ�Ϲرգ�cf���迪��
     while(t --)
         sIsTiNeFiBeL::Tempest_Flare__The_Wind_Splitting_Magic_Bullet();
     return 0;
 }
 
-//test
-/*
-
-
-
-What's wrong with my code?
-1. 小数据？特殊数据？如 n = 1?
-2. 最小值，最大值取多少？是否会溢出？
-3. 初始值有没有赋值？有没有建树？
-4. 数组大小？是否越界？
-5. 思考暴力的时候，考虑是否可能是多个连续段？或者是个数不确定无法暴力？是否可以分治暴力？
-6. 进行详细的分类讨论?
-7. 选择的区间是否可以为空？
-
-Trick:
-1.
-2.
-3.
-
-About implementation skills:
-1. 全局常量均大写字母，而局部变量，临时变量，和函数传递的参数使用小写字母。
-2. 大模拟尽量遵循：怎么方便怎么写。
-3. 对于一些数据很小的需要维护的量并且需要大量讨论时，可以考虑把数组拆掉换成变量。
-4. 写成多个函数。
-*/
 
 
 //============================================================================//
-//==                        SISTINE_FIBEL  システィーナ=フィーベル            ==//
+//==                        SISTINE_FIBEL  �����ƥ��`��=�ե��`�٥�            ==//
 //============================================================================//

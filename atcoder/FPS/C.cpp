@@ -97,7 +97,7 @@ namespace SistineFibel{
     template<class... Ts> void out(const Ts&... ts){ print(ts...); cout << '\n'; }
     namespace IO{
     #define VOID(a) decltype(void(a))
-    struct S{ S(){ cin.tie(nullptr)->sync_with_stdio(0); fixed(cout).precision(2); } }S;
+    struct S{ S(){ cin.tie(nullptr)->sync_with_stdio(0); fixed(cout).precision(12); } }S;
     template<int I> struct P : P<I-1>{};
     template<> struct P<0>{};
     template<class T> void i(T& t){ i(t, P<3>{}); }
@@ -157,44 +157,123 @@ using namespace SistineFibel;
 #define is insert
 #define dbg debug
 
+const ll mod = 998244353;
+struct mm {
+   ll x;
+   mm(ll x_ = 0) : x(x_ % mod) {
+      if(x < 0) x += mod;
+   }
+   friend mm operator+(mm a, mm b) { return a.x + b.x; }
+   friend mm operator-(mm a, mm b) { return a.x - b.x; }
+   friend mm operator*(mm a, mm b) { return a.x * b.x; }
+   friend mm operator/(mm a, mm b) { return a * b.inv(); }
+
+   friend mm& operator+=(mm& a, mm b) { return a = a.x + b.x; }
+   friend mm& operator-=(mm& a, mm b) { return a = a.x - b.x; }
+   friend mm& operator*=(mm& a, mm b) { return a = a.x * b.x; }
+   friend mm& operator/=(mm& a, mm b) { return a = a * b.inv(); }
+   mm inv() const { return pow(mod - 2); }
+   mm pow(ll b) const {
+      mm a = *this, c = 1;
+      while(b) {
+         if(b & 1) c *= a;
+         a *= a;
+         b >>= 1;
+      }
+      return c;
+   }
+};
+// modint を u32 にして加減算を真面目にやると速い
+mm g = 3;  // 原始根
+void fft(vector<mm>& a) {
+   ll n = sz(a), lg = __lg(n);
+   static auto z = [] {
+      vector<mm> z(30);
+      mm s = 1;
+      rep(i, 2, 32) {
+         z[i - 2] = s * g.pow(mod >> i);
+         s *= g.inv().pow(mod >> i);
+      }
+      return z;
+   }();
+   rep(l, 0, lg) {
+      ll w = 1 << (lg - l - 1);
+      mm s = 1;
+      rep(k, 0, 1 << l) {
+         ll o = k << (lg - l);
+         rep(i, o, o + w) {
+            mm x = a[i], y = a[i + w] * s;
+            a[i] = x + y;
+            a[i + w] = x - y;
+         }
+         s *= z[countr_zero<uint64_t>(~k)];
+      }
+   }
+}
+// コピペ
+void ifft(vector<mm>& a) {
+   ll n = sz(a), lg = __lg(n);
+   static auto z = [] {
+      vector<mm> z(30);
+      mm s = 1;
+      rep(i, 2, 32) {  // g を逆数に
+         z[i - 2] = s * g.inv().pow(mod >> i);
+         s *= g.pow(mod >> i);
+      }
+      return z;
+   }();
+   for(ll l = lg; l--;) {  // 逆順に
+      ll w = 1 << (lg - l - 1);
+      mm s = 1;
+      rep(k, 0, 1 << l) {
+         ll o = k << (lg - l);
+         rep(i, o, o + w) {
+            mm x = a[i], y = a[i + w];  // *s を下に移動
+            a[i] = x + y;
+            a[i + w] = (x - y) * s;
+         }
+         s *= z[countr_zero<uint64_t>(~k)];
+      }
+   }
+}
+vector<mm> conv(vector<mm> a, vector<mm> b) {
+   if(a.empty() || b.empty()) return {};
+   size_t s = sz(a) + sz(b) - 1, n = bit_ceil(s);
+   // if(min(sz(a), sz(b)) <= 60) 愚直に掛け算
+   a.resize(n);
+   b.resize(n);
+   fft(a);
+   fft(b);
+   mm inv = mm(n).inv();
+   rep(i, 0, n) a[i] *= b[i] * inv;
+   ifft(a);
+   a.resize(s);
+   return a;
+}
 
 #define el '\n'
 
 namespace sIsTiNeFiBeL {
 
+v<mm> modpow(v<mm> a, ll b, ll s){ 
+	v<mm> ans = {1}; 
+	// cerr << 1 << endl;
+	while(b){ 
+		if(b & 1) (ans = conv(ans, a));
+		(a = conv(a, a)); 
+		b /= 2;
+		ans.resize(s+1);
+		a.resize(s+1);
+		// dbg(b);
+	}
+	return ans; 
+}
 
   inline void Tempest_Flare__The_Wind_Splitting_Magic_Bullet() {
-/**/INT(n);
-  	VEC(pdd, p, n);
-  	vv(double, d, n, n);
-  	rep(i,n) rep(j, n) {
-  		double dx = p[i].fi - p[j].fi;
-  		double dy = p[i].se - p[j].se;
-  		d[i][j] = sqrt(dx*dx+dy*dy);
-  	}
-  	vec(double,d0,n);
-  	rep(i,n) {
-  		double dx = p[i].fi;
-  		double dy = p[i].se;
-  		d0[i] = sqrt(dx*dx+dy*dy);	
-  	}
-  	I s = 1 << n;
-  	vv(double,dp,s,n,LINF);
-  	rep(i,n) dp[1<<i][i] = d0[i];
-
-  	rep(b,s) rep(i,n) if(b & (1 << i)) {
-  		double now = dp[b][i];
-  		if(now >= LINF) continue;
-  		rep(j, n) if(!(b & (1 << j))) {
-  			I t = b | (1 << j);
-  			dp[t][j] = min(dp[t][j], now + d[i][j]);
-  		}
-  	}
-
-  	double ans = LINF;
-  	each(c, dp[s - 1])
-  		chmin(ans, c);
-  	out(ans);
+/**/INT(N,M,S);
+  	vec(mm, a, M+1, 1);
+  	v<mm> ans = modpow(a, N, S);
+  	out(ans[S].x);
 
 return;};
 }

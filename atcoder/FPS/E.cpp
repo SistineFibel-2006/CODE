@@ -97,7 +97,7 @@ namespace SistineFibel{
     template<class... Ts> void out(const Ts&... ts){ print(ts...); cout << '\n'; }
     namespace IO{
     #define VOID(a) decltype(void(a))
-    struct S{ S(){ cin.tie(nullptr)->sync_with_stdio(0); fixed(cout).precision(2); } }S;
+    struct S{ S(){ cin.tie(nullptr)->sync_with_stdio(0); fixed(cout).precision(12); } }S;
     template<int I> struct P : P<I-1>{};
     template<> struct P<0>{};
     template<class T> void i(T& t){ i(t, P<3>{}); }
@@ -157,44 +157,130 @@ using namespace SistineFibel;
 #define is insert
 #define dbg debug
 
+const ll mod = 998244353;
+struct mm {
+   ll x;
+   mm(ll x_ = 0) : x(x_ % mod) {
+      if(x < 0) x += mod;
+   }
+   friend mm operator+(mm a, mm b) { return a.x + b.x; }
+   friend mm operator-(mm a, mm b) { return a.x - b.x; }
+   friend mm operator*(mm a, mm b) { return a.x * b.x; }
+   friend mm operator/(mm a, mm b) { return a * b.inv(); }
+
+   friend mm& operator+=(mm& a, mm b) { return a = a.x + b.x; }
+   friend mm& operator-=(mm& a, mm b) { return a = a.x - b.x; }
+   friend mm& operator*=(mm& a, mm b) { return a = a.x * b.x; }
+   friend mm& operator/=(mm& a, mm b) { return a = a * b.inv(); }
+   mm inv() const { return pow(mod - 2); }
+   mm pow(ll b) const {
+      mm a = *this, c = 1;
+      while(b) {
+         if(b & 1) c *= a;
+         a *= a;
+         b >>= 1;
+      }
+      return c;
+   }
+};
+// modint ¤ò u32 ¤Ë¤·¤Æ¼ÓœpËã¤òÕæÃæÄ¿¤Ë¤ä¤ë¤ÈËÙ¤¤
+mm g = 3;  // Ô­Ê¼¸ù
+void fft(vector<mm>& a) {
+   ll n = sz(a), lg = __lg(n);
+   static auto z = [] {
+      vector<mm> z(30);
+      mm s = 1;
+      rep(i, 2, 32) {
+         z[i - 2] = s * g.pow(mod >> i);
+         s *= g.inv().pow(mod >> i);
+      }
+      return z;
+   }();
+   rep(l, 0, lg) {
+      ll w = 1 << (lg - l - 1);
+      mm s = 1;
+      rep(k, 0, 1 << l) {
+         ll o = k << (lg - l);
+         rep(i, o, o + w) {
+            mm x = a[i], y = a[i + w] * s;
+            a[i] = x + y;
+            a[i + w] = x - y;
+         }
+         s *= z[countr_zero<uint64_t>(~k)];
+      }
+   }
+}
+// ¥³¥Ô¥Ú
+void ifft(vector<mm>& a) {
+   ll n = sz(a), lg = __lg(n);
+   static auto z = [] {
+      vector<mm> z(30);
+      mm s = 1;
+      rep(i, 2, 32) {  // g ¤òÄæÊı¤Ë
+         z[i - 2] = s * g.inv().pow(mod >> i);
+         s *= g.pow(mod >> i);
+      }
+      return z;
+   }();
+   for(ll l = lg; l--;) {  // Äæí˜¤Ë
+      ll w = 1 << (lg - l - 1);
+      mm s = 1;
+      rep(k, 0, 1 << l) {
+         ll o = k << (lg - l);
+         rep(i, o, o + w) {
+            mm x = a[i], y = a[i + w];  // *s ¤òÏÂ¤ËÒÆ„Ó
+            a[i] = x + y;
+            a[i + w] = (x - y) * s;
+         }
+         s *= z[countr_zero<uint64_t>(~k)];
+      }
+   }
+}
+vector<mm> conv(vector<mm> a, vector<mm> b) {
+   if(a.empty() || b.empty()) return {};
+   size_t s = sz(a) + sz(b) - 1, n = bit_ceil(s); 
+   // if(min(sz(a), sz(b)) <= 60) ÓŞÖ±¤Ë’ì¤±Ëã
+   a.resize(n);
+   b.resize(n);
+   fft(a);
+   fft(b);
+   mm inv = mm(n).inv();
+   rep(i, 0, n) a[i] *= b[i] * inv;
+   ifft(a);
+   a.resize(s);
+   return a;
+}
 
 #define el '\n'
 
 namespace sIsTiNeFiBeL {
 
+v<mm> modpow(v<mm> a, ll b, ll s){ 
+	v<mm> ans = {1}; 
+	while(b){ 
+		if(b & 1) {
+			ans = conv(ans, a);
+			if (ssize(ans) > s) ans.resize(s);
+		}
+		a = conv(a, a); 
+		if (ssize(a) > s) a.resize(s);
+		b /= 2;
+	}  
+	return ans; 
+}
 
   inline void Tempest_Flare__The_Wind_Splitting_Magic_Bullet() {
-/**/INT(n);
-  	VEC(pdd, p, n);
-  	vv(double, d, n, n);
-  	rep(i,n) rep(j, n) {
-  		double dx = p[i].fi - p[j].fi;
-  		double dy = p[i].se - p[j].se;
-  		d[i][j] = sqrt(dx*dx+dy*dy);
-  	}
-  	vec(double,d0,n);
-  	rep(i,n) {
-  		double dx = p[i].fi;
-  		double dy = p[i].se;
-  		d0[i] = sqrt(dx*dx+dy*dy);	
-  	}
-  	I s = 1 << n;
-  	vv(double,dp,s,n,LINF);
-  	rep(i,n) dp[1<<i][i] = d0[i];
-
-  	rep(b,s) rep(i,n) if(b & (1 << i)) {
-  		double now = dp[b][i];
-  		if(now >= LINF) continue;
-  		rep(j, n) if(!(b & (1 << j))) {
-  			I t = b | (1 << j);
-  			dp[t][j] = min(dp[t][j], now + d[i][j]);
-  		}
-  	}
-
-  	double ans = LINF;
-  	each(c, dp[s - 1])
-  		chmin(ans, c);
-  	out(ans);
+/**/INT(N,M);
+    mm fact = 1;
+    v<mm> f = {1}, g = {1};
+    rep(i,1,M+1) {
+      fact *= i;
+      f.pb(fact.inv());
+      g = conv(f,g);
+    }
+    fact = 1;
+    rep(i,1,N+1) fact *= i;
+    out((g[N]*fact).x);
 
 return;};
 }
@@ -205,7 +291,7 @@ signed main (){
     //FASTioMAGIC;
     //RuntimeClock _;
     int t = 1;
-    //in(t);  //atcé»˜è®¤å…³é—­ï¼ŒcfæŒ‰éœ€å¼€å¯
+    //in(t);  //atcÄ¬ÈÏ¹Ø±Õ£¬cf°´Ğè¿ªÆô
     while(t --)
         sIsTiNeFiBeL::Tempest_Flare__The_Wind_Splitting_Magic_Bullet();
     return 0;
@@ -217,13 +303,13 @@ signed main (){
 
 
 What's wrong with my code?
-1. å°æ•°æ®ï¼Ÿç‰¹æ®Šæ•°æ®ï¼Ÿå¦‚ n = 1?
-2. æœ€å°å€¼ï¼Œæœ€å¤§å€¼å–å¤šå°‘ï¼Ÿæ˜¯å¦ä¼šæº¢å‡ºï¼Ÿ
-3. åˆå§‹å€¼æœ‰æ²¡æœ‰èµ‹å€¼ï¼Ÿæœ‰æ²¡æœ‰å»ºæ ‘ï¼Ÿ
-4. æ•°ç»„å¤§å°ï¼Ÿæ˜¯å¦è¶Šç•Œï¼Ÿ
-5. æ€è€ƒæš´åŠ›çš„æ—¶å€™ï¼Œè€ƒè™‘æ˜¯å¦å¯èƒ½æ˜¯å¤šä¸ªè¿ç»­æ®µï¼Ÿæˆ–è€…æ˜¯ä¸ªæ•°ä¸ç¡®å®šæ— æ³•æš´åŠ›ï¼Ÿæ˜¯å¦å¯ä»¥åˆ†æ²»æš´åŠ›ï¼Ÿ
-6. è¿›è¡Œè¯¦ç»†çš„åˆ†ç±»è®¨è®º?
-7. é€‰æ‹©çš„åŒºé—´æ˜¯å¦å¯ä»¥ä¸ºç©ºï¼Ÿ
+1. Ğ¡Êı¾İ£¿ÌØÊâÊı¾İ£¿Èç n = 1?
+2. ×îĞ¡Öµ£¬×î´óÖµÈ¡¶àÉÙ£¿ÊÇ·ñ»áÒç³ö£¿
+3. ³õÊ¼ÖµÓĞÃ»ÓĞ¸³Öµ£¿ÓĞÃ»ÓĞ½¨Ê÷£¿
+4. Êı×é´óĞ¡£¿ÊÇ·ñÔ½½ç£¿
+5. Ë¼¿¼±©Á¦µÄÊ±ºò£¬¿¼ÂÇÊÇ·ñ¿ÉÄÜÊÇ¶à¸öÁ¬Ğø¶Î£¿»òÕßÊÇ¸öÊı²»È·¶¨ÎŞ·¨±©Á¦£¿ÊÇ·ñ¿ÉÒÔ·ÖÖÎ±©Á¦£¿
+6. ½øĞĞÏêÏ¸µÄ·ÖÀàÌÖÂÛ?
+7. Ñ¡ÔñµÄÇø¼äÊÇ·ñ¿ÉÒÔÎª¿Õ£¿
 
 Trick:
 1.
@@ -231,13 +317,13 @@ Trick:
 3.
 
 About implementation skills:
-1. å…¨å±€å¸¸é‡å‡å¤§å†™å­—æ¯ï¼Œè€Œå±€éƒ¨å˜é‡ï¼Œä¸´æ—¶å˜é‡ï¼Œå’Œå‡½æ•°ä¼ é€’çš„å‚æ•°ä½¿ç”¨å°å†™å­—æ¯ã€‚
-2. å¤§æ¨¡æ‹Ÿå°½é‡éµå¾ªï¼šæ€ä¹ˆæ–¹ä¾¿æ€ä¹ˆå†™ã€‚
-3. å¯¹äºä¸€äº›æ•°æ®å¾ˆå°çš„éœ€è¦ç»´æŠ¤çš„é‡å¹¶ä¸”éœ€è¦å¤§é‡è®¨è®ºæ—¶ï¼Œå¯ä»¥è€ƒè™‘æŠŠæ•°ç»„æ‹†æ‰æ¢æˆå˜é‡ã€‚
-4. å†™æˆå¤šä¸ªå‡½æ•°ã€‚
+1. È«¾Ö³£Á¿¾ù´óĞ´×ÖÄ¸£¬¶ø¾Ö²¿±äÁ¿£¬ÁÙÊ±±äÁ¿£¬ºÍº¯Êı´«µİµÄ²ÎÊıÊ¹ÓÃĞ¡Ğ´×ÖÄ¸¡£
+2. ´óÄ£Äâ¾¡Á¿×ñÑ­£ºÔõÃ´·½±ãÔõÃ´Ğ´¡£
+3. ¶ÔÓÚÒ»Ğ©Êı¾İºÜĞ¡µÄĞèÒªÎ¬»¤µÄÁ¿²¢ÇÒĞèÒª´óÁ¿ÌÖÂÛÊ±£¬¿ÉÒÔ¿¼ÂÇ°ÑÊı×é²ğµô»»³É±äÁ¿¡£
+4. Ğ´³É¶à¸öº¯Êı¡£
 */
 
 
 //============================================================================//
-//==                        SISTINE_FIBEL  ã‚·ã‚¹ãƒ†ã‚£ãƒ¼ãƒŠ=ãƒ•ã‚£ãƒ¼ãƒ™ãƒ«            ==//
+//==                        SISTINE_FIBEL  ¥·¥¹¥Æ¥£©`¥Ê=¥Õ¥£©`¥Ù¥ë            ==//
 //============================================================================//
