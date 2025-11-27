@@ -157,7 +157,7 @@ using namespace SistineFibel;
 #define is insert
 #define dbg debug
 
-const ll mod = 998244353;
+const ll mod = MOD;
 struct mm {
    ll x;
    mm(ll x_ = 0) : x(x_ % mod) {
@@ -183,121 +183,76 @@ struct mm {
       return c;
    }
 };
-// modint を u32 にして加減算を真面目にやると速い
-mm g = 3;  // 原始根
-void fft(vector<mm>& a) {
-   ll n = sz(a), lg = __lg(n);
-   static auto z = [] {
-      vector<mm> z(30);
-      mm s = 1;
-      rep(i, 2, 32) {
-         z[i - 2] = s * g.pow(mod >> i);
-         s *= g.inv().pow(mod >> i);
-      }
-      return z;
-   }();
-   rep(l, 0, lg) {
-      ll w = 1 << (lg - l - 1);
-      mm s = 1;
-      rep(k, 0, 1 << l) {
-         ll o = k << (lg - l);
-         rep(i, o, o + w) {
-            mm x = a[i], y = a[i + w] * s;
-            a[i] = x + y;
-            a[i + w] = x - y;
-         }
-         s *= z[countr_zero<uint64_t>(~k)];
-      }
-   }
-}
-// コピペ
-void ifft(vector<mm>& a) {
-   ll n = sz(a), lg = __lg(n);
-   static auto z = [] {
-      vector<mm> z(30);
-      mm s = 1;
-      rep(i, 2, 32) {  // g を逆数に
-         z[i - 2] = s * g.inv().pow(mod >> i);
-         s *= g.pow(mod >> i);
-      }
-      return z;
-   }();
-   for(ll l = lg; l--;) {  // 逆順に
-      ll w = 1 << (lg - l - 1);
-      mm s = 1;
-      rep(k, 0, 1 << l) {
-         ll o = k << (lg - l);
-         rep(i, o, o + w) {
-            mm x = a[i], y = a[i + w];  // *s を下に移動
-            a[i] = x + y;
-            a[i + w] = (x - y) * s;
-         }
-         s *= z[countr_zero<uint64_t>(~k)];
-      }
-   }
-}
-vector<mm> conv(vector<mm> a, vector<mm> b) {
-   if(a.empty() || b.empty()) return {};
-   size_t s = sz(a) + sz(b) - 1, n = bit_ceil(s);
-   // if(min(sz(a), sz(b)) <= 60) 愚直に掛け算
-   a.resize(n);
-   b.resize(n);
-   fft(a);
-   fft(b);
-   mm inv = mm(n).inv();
-   rep(i, 0, n) a[i] *= b[i] * inv;
-   ifft(a);
-   chmin(s,1e5+10);
-   a.resize(s);
-   return a;
-}
 
-vector<mm> poly_inv(vector<int> a, int n) {
-    vector<mm> b(1, ((mm)a[0]).inv()); 
-    for (int len = 1; len < n; len <<= 1) {
-        int m = min(n, len << 1);
-        vector<mm> tmp(a.begin(), a.begin() + m);
-        auto t = conv(tmp, b); 
-        t.resize(m);
-        for (int i = 0; i < m; i++) t[i] = (i ? mod - t[i] : (2 - t[i] + mod));
-        b = conv(b, t);
-        b.resize(m);
+namespace ds {
+template<typename T>
+struct BIT {
+  int n;
+  T e;
+  vector<T> vt;
+  static T default_func(const T &t1, const T &t2) { return t1 + t2; }
+  function<T(const T &, const T &)> op = default_func;
+  BIT() {
+    n = 0; e = T();
+    vt = vector<T>(1, e);
+  }
+  BIT(int n, T e, function<T(const T &, const T &)> func) {
+    init(n, e, func);
+  }
+  void init(int _n, T _e, function<T(const T &, const T &)> func) {
+    n = _n; e = _e; op = func;
+    vt.assign(n + 1, e);
+  }
+  void apply(int a, T x) {
+    if (a == 0)
+      return;
+    while (a <= n) {
+      vt[a] = op(vt[a], x);
+      a += a & -a;
     }
-    b.resize(n);
-    return b;
+  }
+  T query(int a) {
+    T res = e;
+    while (a) {
+      res = op(res, vt[a]);
+      a -= a & -a;
+    }
+    return res;
+  }
+};
 }
-
+using ds::BIT;
 
 #define el '\n'
 
 namespace sIsTiNeFiBeL {
 
-v<mm> modpow(v<mm> a, ll b, ll K){ 
-	v<mm> ans = {1}; 
-	cerr << 1 << endl;
-	while(b){ 
-		if(b & 1) (ans = conv(ans, a));
-    ans.resize(K);
-		(a = conv(a, a));
-    a.resize(K); 
-		b /= 2;
-		dbg(b);
-	} 
-	return ans; 
-}
-    
+  // CNTALL => 
 
   inline void Tempest_Flare__The_Wind_Splitting_Magic_Bullet() {
-   INT(n);
-   vec(I,g,n);
-   rep(i,1,n) in(g[i]);
-   vec(I,a,n);
-   a[0] = 1;
-   for (int i = 1; i < n; i++) a[i] = (mod - g[i]) % mod;
-   auto f = poly_inv(a, n);
-   for (int i = 0; i < n; i++) print(f[i].x,"");
-
-  	
+/**/INT(N); VEC(I, a, N);
+    vec(I, b, N);
+    vec(BIT<mm>, x, N);
+    vec(BIT<mm>, y, N);
+    rep(i, N) {
+      b[i] = 1;
+      rep(j,i) b[i] += (a[j] <= a[i]);
+      rep(j,i+1,N) a[i] += (b[j] < b[i]);
+    }
+    rep(i,N) {
+      int p = b[i];
+      rep(j,p,N) {
+        x[j].apply(p, x[j].query(p - 1));
+        y[p].apply(j, x[j].query(p - 1));
+      }
+      rep(j,p) {
+        x[p].apply(j, y[j].query(p - 1));
+        y[j].apply(p, x[j].query(p - 1));
+      }
+    }
+    mm ans = 0;
+    rep(i,N) ans += x[i].query(N - 1);
+    out(ans.x);
 
 return;};
 }
@@ -306,41 +261,16 @@ struct RuntimeClock{std::chrono::high_resolution_clock::time_point s;RuntimeCloc
 
 signed main (){
     //FASTioMAGIC;
-    //RuntimeClock _;
+    RuntimeClock _;
     int t = 1;
-    //in(t);  //atc默认关闭，cf按需开启
+    in(t);  //atcĬ�Ϲرգ�cf���迪��
     while(t --)
         sIsTiNeFiBeL::Tempest_Flare__The_Wind_Splitting_Magic_Bullet();
     return 0;
 }
 
-//test
-/*
-
-
-
-What's wrong with my code?
-1. 小数据？特殊数据？如 n = 1?
-2. 最小值，最大值取多少？是否会溢出？
-3. 初始值有没有赋值？有没有建树？
-4. 数组大小？是否越界？
-5. 思考暴力的时候，考虑是否可能是多个连续段？或者是个数不确定无法暴力？是否可以分治暴力？
-6. 进行详细的分类讨论?
-7. 选择的区间是否可以为空？
-
-Trick:
-1.
-2.
-3.
-
-About implementation skills:
-1. 全局常量均大写字母，而局部变量，临时变量，和函数传递的参数使用小写字母。
-2. 大模拟尽量遵循：怎么方便怎么写。
-3. 对于一些数据很小的需要维护的量并且需要大量讨论时，可以考虑把数组拆掉换成变量。
-4. 写成多个函数。
-*/
 
 
 //============================================================================//
-//==                        SISTINE_FIBEL  システィーナ=フィーベル            ==//
+//==                        SISTINE_FIBEL  �����ƥ��`��=�ե��`�٥�            ==//
 //============================================================================//
