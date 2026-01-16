@@ -1,0 +1,8 @@
+#include <stdio.h>
+
+int main() {
+    int b = 1;
+    int a[][2] = {1, 2, 3, 4, 5, 6, 7};
+    printf("%d", 0[a + b][1]);
+    // int *c = (int[]) {1, 2, 3};
+}
