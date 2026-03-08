@@ -1,0 +1,16 @@
+public class person {
+    private String name;
+    private int age;
+    public String gname() {
+	return name;
+    }
+    public String gage() {
+	return age;
+    }
+    public void sname(String a) {
+	this.name = a;
+    }
+    public void sage(int a) {
+	this.age = a;
+    }
+}

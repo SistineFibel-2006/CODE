@@ -11,7 +11,10 @@
 (add-to-list 'default-frame-alist `(font . "Fira Code Retina"))
 
 (rc/require-theme 'gruber-darker)
-
+(with-eval-after-load 'org (global-org-modern-mode))
+;;(vertico-posframe-mode 1)
+;;(vertico-reverse-mode -1)
+(ivy-posframe-mode 1)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -23,7 +26,9 @@
      default))
  '(display-line-numbers-type 'relative)
  '(inhibit-startup-screen t)
- '(package-selected-packages nil))
+ '(package-selected-packages
+   '(dap-mode dash-functional gruber-darker-theme haskell-mode
+	      multiple-cursors smex typst-ts-mode yasnippet-snippets)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -92,3 +97,34 @@
   ;; 快捷键绑定
   (define-key markdown-mode-map (kbd "C-c p") 'markdown-preview)
   (define-key markdown-mode-map (kbd "C-c C-e") 'markdown-do))
+
+(use-package dap-mode
+  :ensure t
+  :config
+  (dap-mode 1)
+  (dap-ui-mode 1) ;; 启用 UI 界面
+  (dap-tooltip-mode 1) ;; 启用鼠标悬停提示
+  (require 'dap-gdb-lldb)) ;; 加载 C/C++ 支持
+
+(use-package typst-ts-mode
+  :ensure t
+  :mode ("\\.typ\\'" . typst-ts-mode)
+  :custom
+  (typst-ts-mode-watch-options "--open"))
+
+;; 告诉 Emacs typst 的 tree-sitter 语法仓库地址
+(with-eval-after-load 'treesit
+  (add-to-list 'treesit-language-source-alist
+               '(typst "https://github.com/uben0/tree-sitter-typst")))
+
+;; doom/packages.el
+;; typst: https://codeberg.org/meow_king/typst-ts-mode/wiki/Installation.md
+(package! typst-ts-mode :recipe (:host codeberg :repo "meow_king/typst-ts-mode"))
+
+
+;; save on focus lost
+;; https://stackoverflow.com/q/1230245
+(add-hook 'focus-out-hook (lambda () (interactive) (save-some-buffers t)))
+
+(define-key evil-normal-state-map (kbd "<escape>") (lambda () (interactive) (save-some-buffers t)))
+
