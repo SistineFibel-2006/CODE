@@ -1,0 +1,7 @@
+public class Main {
+    public static void main(String [] argv) {
+	Counter cnt = new Counter();
+	cnt.count();
+	System.out.println(cnt.getR());
+    }
+}

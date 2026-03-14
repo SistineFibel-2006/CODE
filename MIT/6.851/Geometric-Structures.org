@@ -1,0 +1,68 @@
+#+Writer: Sistine=Fibel
+#+Date: 2026/3/8
+* Geometry-1
+** 平面点定位
+平面图问题：
+1. 静态的：
+   1) 预处理图
+   2) 支持动态查询：
+      哪个区域包含了点 p:(x, y)
+2. 动态的（图是动态的）：
+   - 添加或删除边：
+     - 通过使用"扫描线"算法：
+	记录划过的对于每一个线是否相交，且记录位置，使用二叉搜索树维护
+	技术上的： 通常使用 BBST (Balance Binary Search Tree)
+     - 如果加入了可持久性呢？
+	Query(t, successor(y)) => (t,y) 上方的
+       - 垂直扫描射线会得到平面地图：
+	  查询第一个遇到的边
+	  O(logN) per Query
+     - 如果加入了回溯性呢？
+	Insert(t_1, insert(y)),
+	Insert(t_2, delete(y)) => 动态扫描射线 在水平的线段中
+	O(logN)
+     - OPEN: 更一般化的地图呢？
+     - OPEN: 更一般化的线段呢？
+	=> O(s^(1+epsi) space , O(n/sqrt(s) polylg n) query
+** Orthogonal range searching （正交内点查询）
+N 个点， q 次查询矩形内的点数量 
+=> O(log n + k) query : k=> size of output
+1. Range trees: O(lg^(d) n + k) query;
+   1) d = 1: query [a,b] （一维查询）
+      - BBST 把叶子作为点查询（比如非叶子节点上放 max{左子树} ）
+	 answer = pre(a) ... succ(b): O(lg n) subtrees 
+   2) d = 2:
+      对于每一个子树，称其为 x - 子树：存储一个 y树
+      对于每个元素，都在 log n y树 里
+      所以是 O(n log n) 空间
+      查询就是 O(log^2 n) y树
+   O(log^d n) 查询， $ O(n log^(d-1) n) $ 空间和预处理
+2. Layered range trees （分层范围树）
+   对于每一个x-树都指向一个以y排序好的数组
+   对于x-树的子树，其数组也是前者的子集，通过存储前者和后者继承的指针
+   于是我们有 O(log^(d-1) n) 的查询了
+3. Weight balanced trees （权重平衡树） BB[alpha]
+   对于每一个节点 v:
+   - size(left(v)) >= alpha.size(v)
+   - size(right(v)) >= alpha.size(v)
+   高度 <= log_(1/alpha) n
+   1) 更新：
+      当节点权重不平衡时？
+      - 重建整个子树
+      - 有 theta(k) 次更新
+      O(lg n) 次更新如果重建需要 O(k): k = size(subtree)
+   2) 对于分层 range-tree:
+      O(lg^d n) 更新
+      O(lg^(d-1) n) 查询
+4. 静态正交范围查询：
+   O(lg^(d-1) n) 查询
+** Fractional cascading （分散层叠）：
+1. Warmup:
+   k 个列表 L1~Lk， 每个大小 n： 
+   - 查询： 在所有列表中查询 x
+   - 显然： 可以 O(k log n) 解决，二分查找
+   - 改进： 可以 O(k + log n) 解决，使用分散层叠
+      把 Lk 中 _所有其他_（一个小数单位的东西，比如一半的）项目 加入 Lk-1 -> Lk-1'
+      也就是：  把 Li 中每一个其他项目 加入 Li-1 -> Li-1'
+      $|Li'| = |Li| + 1/2 |Li-1| = O(n)$
+      
