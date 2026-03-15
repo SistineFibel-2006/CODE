@@ -8,7 +8,7 @@ using namespace std;
 
 
 #define int long long
-
+int a = 312312;
 void solve() {
     
     int n;
