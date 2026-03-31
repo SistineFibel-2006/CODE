@@ -1,3 +1,8 @@
+#if defined(__GNUC__)
+#include <bits/allocator.h>
+#pragma GCC optimize("Ofast,unroll-loops")
+#pragma GCC target("avx2,popcnt")
+#endif
 #include <bits/stdc++.h>
 using namespace std;
 //#include "atcoder/all"
@@ -10,6 +15,12 @@ namespace SistineFibel{
     // #define all(x) (x).begin(),(x).end()
     #define return(statement) return (statement),void();
     // bool YON(bool a,bool upp=false){if(a){std::cout<<(upp?"YES\n":"Yes\n");}else{std::cout<<(upp?"NO\n":"No\n");}return a;}
+    using I = int;
+    using i32 = int;
+    using i64 = long long;
+    using u32 = unsigned int;
+    using u64 = unsigned long long;
+    using Int = long long;
     using ll = long long;
     using ld = long double;
     using ull = unsigned long long;
@@ -91,29 +102,30 @@ namespace SistineFibel{
     vector<ll> divisor(ull x){ vector<ll> ans; for(ull i = 1; i * i <= x; i++) if(x % i == 0) ans.push_back(i); rrep(i, ans.size() - (ans.back() * ans.back() == x)) ans.push_back(x / ans[i]); return ans; }
     template<class T> unordered_map<T, ll> press(vector<T> a){ uniq(a); unordered_map<T, ll> ans; rep(i, a.size()) ans[a[i]] = i; return ans; }
     template<class T> auto run_press(const T& a){ vector<pair<decay_t<decltype(a[0])>, ll>> ans; each(x, a){ if(ans.empty() || ans.back().first != x) ans.emplace_back(x, 1); else ans.back().second++; } return ans; }
+    
     template<class... Ts> void in(Ts&... t);
     [[maybe_unused]] void print(){}
     template<class T, class... Ts> void print(const T& t, const Ts&... ts);
     template<class... Ts> void out(const Ts&... ts){ print(ts...); cout << '\n'; }
     namespace IO{
-    #define VOID(a) decltype(void(a))
-    struct S{ S(){ cin.tie(nullptr)->sync_with_stdio(0); fixed(cout).precision(12); } }S;
-    template<int I> struct P : P<I-1>{};
-    template<> struct P<0>{};
-    template<class T> void i(T& t){ i(t, P<3>{}); }
-    void i(vector<bool>::reference t, P<3>){ int a; i(a); t = a; }
-    template<class T> auto i(T& t, P<2>) -> VOID(cin >> t){ cin >> t; }
-    template<class T> auto i(T& t, P<1>) -> VOID(begin(t)){ for(auto&& x : t) i(x); }
-    template<class T, size_t... idx> void ituple(T& t, index_sequence<idx...>){ in(get<idx>(t)...); }
-    template<class T> auto i(T& t, P<0>) -> VOID(tuple_size<T>{}){ ituple(t, make_index_sequence<tuple_size<T>::value>{}); }
-    template<class T> void o(const T& t){ o(t, P<4>{}); }
-    template<size_t N> void o(const char (&t)[N], P<4>){ cout << t; }
-    template<class T, size_t N> void o(const T (&t)[N], P<3>){ o(t[0]); for(size_t i = 1; i < N; i++){ o(' '); o(t[i]); } }
-    template<class T> auto o(const T& t, P<2>) -> VOID(cout << t){ cout << t; }
-    template<class T> auto o(const T& t, P<1>) -> VOID(begin(t)){ bool first = 1; for(auto&& x : t) { if(first) first = 0; else o(' '); o(x); } }
-    template<class T, size_t... idx> void otuple(const T& t, index_sequence<idx...>){ print(get<idx>(t)...); }
-    template<class T> auto o(T& t, P<0>) -> VOID(tuple_size<T>{}){ otuple(t, make_index_sequence<tuple_size<T>::value>{}); }
-    #undef VOID
+        #define VOID(a) decltype(void(a))
+        struct S{ S(){ cin.tie(nullptr)->sync_with_stdio(0); fixed(cout).precision(12); } }S;
+        template<int I> struct P : P<I-1>{};
+        template<> struct P<0>{};
+        template<class T> void i(T& t){ i(t, P<3>{}); }
+        void i(vector<bool>::reference t, P<3>){ int a; i(a); t = a; }
+        template<class T> auto i(T& t, P<2>) -> VOID(cin >> t){ cin >> t; }
+        template<class T> auto i(T& t, P<1>) -> VOID(begin(t)){ for(auto&& x : t) i(x); }
+        template<class T, size_t... idx> void ituple(T& t, index_sequence<idx...>){ in(get<idx>(t)...); }
+        template<class T> auto i(T& t, P<0>) -> VOID(tuple_size<T>{}){ ituple(t, make_index_sequence<tuple_size<T>::value>{}); }
+        template<class T> void o(const T& t){ o(t, P<4>{}); }
+        template<size_t N> void o(const char (&t)[N], P<4>){ cout << t; }
+        template<class T, size_t N> void o(const T (&t)[N], P<3>){ o(t[0]); for(size_t i = 1; i < N; i++){ o(' '); o(t[i]); } }
+        template<class T> auto o(const T& t, P<2>) -> VOID(cout << t){ cout << t; }
+        template<class T> auto o(const T& t, P<1>) -> VOID(begin(t)){ bool first = 1; for(auto&& x : t) { if(first) first = 0; else o(' '); o(x); } }
+        template<class T, size_t... idx> void otuple(const T& t, index_sequence<idx...>){ print(get<idx>(t)...); }
+        template<class T> auto o(T& t, P<0>) -> VOID(tuple_size<T>{}){ otuple(t, make_index_sequence<tuple_size<T>::value>{}); }
+        #undef VOID
     }
     template<class... Ts> void in(Ts&... t){ (IO::i(t), ...); }
     template<class T, class... Ts> void print(const T& t, const Ts&... ts){ IO::o(t); (IO::o((cout << ' ', ts)), ...); }
@@ -131,6 +143,33 @@ namespace SistineFibel{
     #else
     #define debug(...) void(0)
     #endif
+    
+    template<class T>
+    using v = vector<T>;
+    template <typename T>
+    T pop(deque<T> &que) {
+      T a = que.front();
+      que.pop_front();
+      return a;
+    }
+    template <class T, class Container, class Compare>
+    T pop(priority_queue<T, Container, Compare> &que) {
+      T a = que.top();
+      que.pop();
+      return a;
+    }
+    template <typename T>
+    T pop(v<T> &que) {
+      T a = que.back();
+      que.pop_back();
+      return a;
+    }
+    template <typename T>
+    T pop(stack<T> &que) {
+      T a = que.top();
+      que.pop();
+      return a;
+    }
     #define YESNO(yes,no) void yes(bool i = 1){ out(i?#yes:#no); } void no(){ out(#no); }
     YESNO(first, second)
     YESNO(First, Second)
@@ -140,14 +179,33 @@ namespace SistineFibel{
     YESNO(Possible, Impossible)
     YESNO(POSSIBLE, IMPOSSIBLE)
 
-    using I = int;
-    using i32 = int;
-    using i64 = long long;
-    using u32 = unsigned int;
-    using u64 = unsigned long long;
+    template <typename F>
+    ll binary_search(F check, ll ok, ll ng, bool check_ok = true) {
+      if (check_ok) assert(check(ok));
+      while (llabs(ok - ng) > 1) {
+        auto x = (ng + ok) / 2;
+        (check(x) ? ok : ng) = x;
+      }
+      return ok;
+    }
+    template <typename F>
+    double binary_search_real(F check, double ok, double ng, int iter = 100) {
+      rep(iter) {
+        double x = (ok + ng) / 2;
+        (check(x) ? ok : ng) = x;
+      }
+      double ans = (ok + ng) / 2;
+      return ans;
+    }
+    template <typename T, typename U>
+    v<T> cumsum(const v<U> &A, int off = 1) {
+      int N = A.size();
+      v<T> B(N + 1);
+      rep(i, N) { B[i + 1] = B[i] + A[i]; }
+      if (off == 0) B.erase(B.begin());
+      return B;
+    }
 
-    template<class T>
-    using v = vector<T>;
 } //NAMESPCACE SistineFibel
 using namespace SistineFibel;
 

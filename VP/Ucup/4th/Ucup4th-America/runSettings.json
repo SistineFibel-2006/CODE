@@ -1,0 +1,20 @@
+{
+  ".cpp": {
+    "compileCommand": [
+      "g++",
+      "${file}",
+      "-g",
+      "-o",
+      "${fileDirname}/${fileBasenameNoExtension}"
+    ],
+    "runCommand": [
+      "${fileDirname}/${fileBasenameNoExtension}"
+    ],
+    "debugCommand": [
+      "gdbserver",
+      "localhost:${debugPort}",
+      "${fileDirname}/${fileBasenameNoExtension}"
+    ],
+    "debugAttachConfig": "GDB: Attach"
+  }
+}

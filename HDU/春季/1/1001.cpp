@@ -1,4 +1,7 @@
+#include <algorithm>
 #include <bits/stdc++.h>
+#include <iterator>
+#include <unordered_map>
 using namespace std;
 //#include "atcoder/all"
 
@@ -157,82 +160,61 @@ using namespace SistineFibel;
 #define is insert
 #define dbg debug
 
-const ll mod = 998244353;
-struct mm {
-   ll x;
-   mm(ll x_ = 0) : x(x_ % mod) {
-      if(x < 0) x += mod;
-   }
-   friend mm operator+(mm a, mm b) { return a.x + b.x; }
-   friend mm operator-(mm a, mm b) { return a.x - b.x; }
-   friend mm operator*(mm a, mm b) { return a.x * b.x; }
-   friend mm operator/(mm a, mm b) { return a * b.inv(); }
-
-   friend mm& operator+=(mm& a, mm b) { return a = a.x + b.x; }
-   friend mm& operator-=(mm& a, mm b) { return a = a.x - b.x; }
-   friend mm& operator*=(mm& a, mm b) { return a = a.x * b.x; }
-   friend mm& operator/=(mm& a, mm b) { return a = a * b.inv(); }
-   mm inv() const { return pow(mod - 2); }
-   mm pow(ll b) const {
-      mm a = *this, c = 1;
-      while(b) {
-         if(b & 1) c *= a;
-         a *= a;
-         b >>= 1;
-      }
-      return c;
-   }
-};
-
-struct Comb {
-private:
-    vector<mm> fact;
-    vector<mm> invf;
-public:
-    Comb(int _n) {
-        fact.resize(_n + 1);
-        invf.resize(_n + 1);
-        fact[0] = 1;
-        rep(i, 1, _n + 1) fact[i] = fact[i - 1] * i;
-        invf[_n] = fact[_n].inv();
-        for(int i = _n; i > 0; i --) invf[i - 1] = invf[i] * i;
-    }
-    mm C(int n, int k) {
-        if(k < 0 || k > n) return 0;
-        return fact[n] * invf[k] * invf[n - k];
-    }
-};
 
 #define el '\n'
 
 namespace sIsTiNeFiBeL {
 
-/*
-    a : [0, 1]
-    b : [0, +inf]
-    /sum_(i=0)^1 x^i * /sum_(i=0)^inf y^i - x^0 y^0 => (x+y)/(1-y)
-    [x^N y^M] /sum_(i=0)^inf ((x+y)/(1-y))^i
-    [x^N y^M] 1/ (1 - (x+y)/(1-y))
-    [x^N y^M] (1 - y) / (1 - x - 2y)
-    [x^N y^M] 1 / (1 - (x + 2y)) - [x^N y^(M - 1)] 1 / (1 - (x + 2y))
-    [x^N y^M] /sum_(i=0)^inf (x + 2y) ^ i - [x^N y^(M - 1)] /sum_(i=0)^inf (x + 2y) ^ i
-    i = N + M 
-    [x^N y^M] (x + 2y) ^ (N + M) - [x^N y^(M - 1)] (x + 2y) ^ (N + M - 1) 
-    C_(N)^(N + M) 2 ^ M -  C_(N)^(N + M - 1) 2 ^ (M - 1)
-*/
+
   inline void Tempest_Flare__The_Wind_Splitting_Magic_Bullet() {
-/**/INT(N, M);
-    // cout << 1 << endl;
-    int N_ = N + M + 10;
-    Comb comb(N_);
-    mm c = 2;
-    mm ans1 = comb.C(N + M, N) * c.pow(M);
-    mm ans2 = 0;
-    if(M != 0) {
-        ans2 = comb.C(N + M - 1, N) * c.pow(M - 1);
-    }   
-    mm ans = ans1 - ans2;
-    out(ans.x);
+/**/LL(n);
+  	vec(I,a,n+1);
+  	unordered_map<int, v<I>> p;
+  	rep(i,1,n+1) {
+  		in(a[i]);
+  		p[a[i]].pb(i);
+  	} 
+  	vec(I, L, n + 1, 0);
+  	vec(I, R, n + 1, n + 1);
+  	vec(I, st, 0);
+
+  	rep(i, 1, n + 1) {
+  		while(!empty(st) && a[st.back()] <= a[i]) st.pop_back();
+  		L[i] = empty(st) ? 0 : st.back();
+  		st.pb(i);
+  	}
+  	st.clear();
+   	rrep(i, 1, n + 1) {
+  		while(!empty(st) && a[st.back()] < a[i]) st.pop_back();
+  		R[i] = empty(st) ? n + 1 : st.back();
+  		st.pb(i);
+  	}
+
+  	ll lose = 0;
+
+  	rep(m, 1, n + 1) {
+  		if(a[m] % 2 == 0) continue;
+  		I l = L[m] + 1, r = R[m] - 1;
+
+  		if(m - l < r - m) {
+  			rep(i, l, m) {
+  				I tar = a[m] + 1 - a[i];
+  				if(p.count(tar)) {
+  					auto &&ve = p[tar];
+  					lose += upper_bound(all(ve), r) - lower_bound(all(ve), m + 1);
+  				}
+  			}
+  		} else {
+  			rep(j, m + 1, r + 1) {
+  				I tar = a[m] + 1 - a[j];
+  				if(p.count(tar)) {
+  					auto &&ve = p[tar];
+  					lose += upper_bound(all(ve), m - 1) - lower_bound(all(ve), l);
+  				}
+  			}
+  		}
+  	}
+  	out(n * n - 2 * lose);
 
 return;};
 }
@@ -241,16 +223,41 @@ struct RuntimeClock{std::chrono::high_resolution_clock::time_point s;RuntimeCloc
 
 signed main (){
     //FASTioMAGIC;
-    RuntimeClock _;
+    //RuntimeClock _;
     int t = 1;
-    // in(t);  //atcĬ�Ϲرգ�cf���迪��
+    in(t);  //atc默认关闭，cf按需开启
     while(t --)
         sIsTiNeFiBeL::Tempest_Flare__The_Wind_Splitting_Magic_Bullet();
     return 0;
 }
 
+//test
+/*
+
+
+
+What's wrong with my code?
+1. 小数据？特殊数据？如 n = 1?
+2. 最小值，最大值取多少？是否会溢出？
+3. 初始值有没有赋值？有没有建树？
+4. 数组大小？是否越界？
+5. 思考暴力的时候，考虑是否可能是多个连续段？或者是个数不确定无法暴力？是否可以分治暴力？
+6. 进行详细的分类讨论?
+7. 选择的区间是否可以为空？
+
+Trick:
+1.
+2.
+3.
+
+About implementation skills:
+1. 全局常量均大写字母，而局部变量，临时变量，和函数传递的参数使用小写字母。
+2. 大模拟尽量遵循：怎么方便怎么写。
+3. 对于一些数据很小的需要维护的量并且需要大量讨论时，可以考虑把数组拆掉换成变量。
+4. 写成多个函数。
+*/
 
 
 //============================================================================//
-//==                        SISTINE_FIBEL  �����ƥ��`��=�ե��`�٥�            ==//
+//==                        SISTINE_FIBEL  システィーナ=フィーベル            ==//
 //============================================================================//

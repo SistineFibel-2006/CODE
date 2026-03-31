@@ -1,3 +1,9 @@
+#include <iterator>
+#if defined(__GNUC__)
+#include <bits/allocator.h>
+#pragma GCC optimize("Ofast,unroll-loops")
+#pragma GCC target("avx2,popcnt")
+#endif
 #include <bits/stdc++.h>
 using namespace std;
 //#include "atcoder/all"
@@ -10,6 +16,12 @@ namespace SistineFibel{
     // #define all(x) (x).begin(),(x).end()
     #define return(statement) return (statement),void();
     // bool YON(bool a,bool upp=false){if(a){std::cout<<(upp?"YES\n":"Yes\n");}else{std::cout<<(upp?"NO\n":"No\n");}return a;}
+    using I = int;
+    using i32 = int;
+    using i64 = long long;
+    using u32 = unsigned int;
+    using u64 = unsigned long long;
+    using Int = long long;
     using ll = long long;
     using ld = long double;
     using ull = unsigned long long;
@@ -91,29 +103,30 @@ namespace SistineFibel{
     vector<ll> divisor(ull x){ vector<ll> ans; for(ull i = 1; i * i <= x; i++) if(x % i == 0) ans.push_back(i); rrep(i, ans.size() - (ans.back() * ans.back() == x)) ans.push_back(x / ans[i]); return ans; }
     template<class T> unordered_map<T, ll> press(vector<T> a){ uniq(a); unordered_map<T, ll> ans; rep(i, a.size()) ans[a[i]] = i; return ans; }
     template<class T> auto run_press(const T& a){ vector<pair<decay_t<decltype(a[0])>, ll>> ans; each(x, a){ if(ans.empty() || ans.back().first != x) ans.emplace_back(x, 1); else ans.back().second++; } return ans; }
+    
     template<class... Ts> void in(Ts&... t);
     [[maybe_unused]] void print(){}
     template<class T, class... Ts> void print(const T& t, const Ts&... ts);
     template<class... Ts> void out(const Ts&... ts){ print(ts...); cout << '\n'; }
     namespace IO{
-    #define VOID(a) decltype(void(a))
-    struct S{ S(){ cin.tie(nullptr)->sync_with_stdio(0); fixed(cout).precision(12); } }S;
-    template<int I> struct P : P<I-1>{};
-    template<> struct P<0>{};
-    template<class T> void i(T& t){ i(t, P<3>{}); }
-    void i(vector<bool>::reference t, P<3>){ int a; i(a); t = a; }
-    template<class T> auto i(T& t, P<2>) -> VOID(cin >> t){ cin >> t; }
-    template<class T> auto i(T& t, P<1>) -> VOID(begin(t)){ for(auto&& x : t) i(x); }
-    template<class T, size_t... idx> void ituple(T& t, index_sequence<idx...>){ in(get<idx>(t)...); }
-    template<class T> auto i(T& t, P<0>) -> VOID(tuple_size<T>{}){ ituple(t, make_index_sequence<tuple_size<T>::value>{}); }
-    template<class T> void o(const T& t){ o(t, P<4>{}); }
-    template<size_t N> void o(const char (&t)[N], P<4>){ cout << t; }
-    template<class T, size_t N> void o(const T (&t)[N], P<3>){ o(t[0]); for(size_t i = 1; i < N; i++){ o(' '); o(t[i]); } }
-    template<class T> auto o(const T& t, P<2>) -> VOID(cout << t){ cout << t; }
-    template<class T> auto o(const T& t, P<1>) -> VOID(begin(t)){ bool first = 1; for(auto&& x : t) { if(first) first = 0; else o(' '); o(x); } }
-    template<class T, size_t... idx> void otuple(const T& t, index_sequence<idx...>){ print(get<idx>(t)...); }
-    template<class T> auto o(T& t, P<0>) -> VOID(tuple_size<T>{}){ otuple(t, make_index_sequence<tuple_size<T>::value>{}); }
-    #undef VOID
+        #define VOID(a) decltype(void(a))
+        struct S{ S(){ cin.tie(nullptr)->sync_with_stdio(0); fixed(cout).precision(12); } }S;
+        template<int I> struct P : P<I-1>{};
+        template<> struct P<0>{};
+        template<class T> void i(T& t){ i(t, P<3>{}); }
+        void i(vector<bool>::reference t, P<3>){ int a; i(a); t = a; }
+        template<class T> auto i(T& t, P<2>) -> VOID(cin >> t){ cin >> t; }
+        template<class T> auto i(T& t, P<1>) -> VOID(begin(t)){ for(auto&& x : t) i(x); }
+        template<class T, size_t... idx> void ituple(T& t, index_sequence<idx...>){ in(get<idx>(t)...); }
+        template<class T> auto i(T& t, P<0>) -> VOID(tuple_size<T>{}){ ituple(t, make_index_sequence<tuple_size<T>::value>{}); }
+        template<class T> void o(const T& t){ o(t, P<4>{}); }
+        template<size_t N> void o(const char (&t)[N], P<4>){ cout << t; }
+        template<class T, size_t N> void o(const T (&t)[N], P<3>){ o(t[0]); for(size_t i = 1; i < N; i++){ o(' '); o(t[i]); } }
+        template<class T> auto o(const T& t, P<2>) -> VOID(cout << t){ cout << t; }
+        template<class T> auto o(const T& t, P<1>) -> VOID(begin(t)){ bool first = 1; for(auto&& x : t) { if(first) first = 0; else o(' '); o(x); } }
+        template<class T, size_t... idx> void otuple(const T& t, index_sequence<idx...>){ print(get<idx>(t)...); }
+        template<class T> auto o(T& t, P<0>) -> VOID(tuple_size<T>{}){ otuple(t, make_index_sequence<tuple_size<T>::value>{}); }
+        #undef VOID
     }
     template<class... Ts> void in(Ts&... t){ (IO::i(t), ...); }
     template<class T, class... Ts> void print(const T& t, const Ts&... ts){ IO::o(t); (IO::o((cout << ' ', ts)), ...); }
@@ -131,6 +144,33 @@ namespace SistineFibel{
     #else
     #define debug(...) void(0)
     #endif
+    
+    template<class T>
+    using v = vector<T>;
+    template <typename T>
+    T pop(deque<T> &que) {
+      T a = que.front();
+      que.pop_front();
+      return a;
+    }
+    template <class T, class Container, class Compare>
+    T pop(priority_queue<T, Container, Compare> &que) {
+      T a = que.top();
+      que.pop();
+      return a;
+    }
+    template <typename T>
+    T pop(v<T> &que) {
+      T a = que.back();
+      que.pop_back();
+      return a;
+    }
+    template <typename T>
+    T pop(stack<T> &que) {
+      T a = que.top();
+      que.pop();
+      return a;
+    }
     #define YESNO(yes,no) void yes(bool i = 1){ out(i?#yes:#no); } void no(){ out(#no); }
     YESNO(first, second)
     YESNO(First, Second)
@@ -140,14 +180,33 @@ namespace SistineFibel{
     YESNO(Possible, Impossible)
     YESNO(POSSIBLE, IMPOSSIBLE)
 
-    using I = int;
-    using i32 = int;
-    using i64 = long long;
-    using u32 = unsigned int;
-    using u64 = unsigned long long;
+    template <typename F>
+    ll binary_search(F check, ll ok, ll ng, bool check_ok = true) {
+      if (check_ok) assert(check(ok));
+      while (llabs(ok - ng) > 1) {
+        auto x = (ng + ok) / 2;
+        (check(x) ? ok : ng) = x;
+      }
+      return ok;
+    }
+    template <typename F>
+    double binary_search_real(F check, double ok, double ng, int iter = 100) {
+      rep(iter) {
+        double x = (ok + ng) / 2;
+        (check(x) ? ok : ng) = x;
+      }
+      double ans = (ok + ng) / 2;
+      return ans;
+    }
+    template <typename T, typename U>
+    v<T> cumsum(const v<U> &A, int off = 1) {
+      int N = A.size();
+      v<T> B(N + 1);
+      rep(i, N) { B[i + 1] = B[i] + A[i]; }
+      if (off == 0) B.erase(B.begin());
+      return B;
+    }
 
-    template<class T>
-    using v = vector<T>;
 } //NAMESPCACE SistineFibel
 using namespace SistineFibel;
 
@@ -157,82 +216,38 @@ using namespace SistineFibel;
 #define is insert
 #define dbg debug
 
-const ll mod = 998244353;
-struct mm {
-   ll x;
-   mm(ll x_ = 0) : x(x_ % mod) {
-      if(x < 0) x += mod;
-   }
-   friend mm operator+(mm a, mm b) { return a.x + b.x; }
-   friend mm operator-(mm a, mm b) { return a.x - b.x; }
-   friend mm operator*(mm a, mm b) { return a.x * b.x; }
-   friend mm operator/(mm a, mm b) { return a * b.inv(); }
-
-   friend mm& operator+=(mm& a, mm b) { return a = a.x + b.x; }
-   friend mm& operator-=(mm& a, mm b) { return a = a.x - b.x; }
-   friend mm& operator*=(mm& a, mm b) { return a = a.x * b.x; }
-   friend mm& operator/=(mm& a, mm b) { return a = a * b.inv(); }
-   mm inv() const { return pow(mod - 2); }
-   mm pow(ll b) const {
-      mm a = *this, c = 1;
-      while(b) {
-         if(b & 1) c *= a;
-         a *= a;
-         b >>= 1;
-      }
-      return c;
-   }
-};
-
-struct Comb {
-private:
-    vector<mm> fact;
-    vector<mm> invf;
-public:
-    Comb(int _n) {
-        fact.resize(_n + 1);
-        invf.resize(_n + 1);
-        fact[0] = 1;
-        rep(i, 1, _n + 1) fact[i] = fact[i - 1] * i;
-        invf[_n] = fact[_n].inv();
-        for(int i = _n; i > 0; i --) invf[i - 1] = invf[i] * i;
-    }
-    mm C(int n, int k) {
-        if(k < 0 || k > n) return 0;
-        return fact[n] * invf[k] * invf[n - k];
-    }
-};
 
 #define el '\n'
 
 namespace sIsTiNeFiBeL {
 
-/*
-    a : [0, 1]
-    b : [0, +inf]
-    /sum_(i=0)^1 x^i * /sum_(i=0)^inf y^i - x^0 y^0 => (x+y)/(1-y)
-    [x^N y^M] /sum_(i=0)^inf ((x+y)/(1-y))^i
-    [x^N y^M] 1/ (1 - (x+y)/(1-y))
-    [x^N y^M] (1 - y) / (1 - x - 2y)
-    [x^N y^M] 1 / (1 - (x + 2y)) - [x^N y^(M - 1)] 1 / (1 - (x + 2y))
-    [x^N y^M] /sum_(i=0)^inf (x + 2y) ^ i - [x^N y^(M - 1)] /sum_(i=0)^inf (x + 2y) ^ i
-    i = N + M 
-    [x^N y^M] (x + 2y) ^ (N + M) - [x^N y^(M - 1)] (x + 2y) ^ (N + M - 1) 
-    C_(N)^(N + M) 2 ^ M -  C_(N)^(N + M - 1) 2 ^ (M - 1)
-*/
+
   inline void Tempest_Flare__The_Wind_Splitting_Magic_Bullet() {
-/**/INT(N, M);
-    // cout << 1 << endl;
-    int N_ = N + M + 10;
-    Comb comb(N_);
-    mm c = 2;
-    mm ans1 = comb.C(N + M, N) * c.pow(M);
-    mm ans2 = 0;
-    if(M != 0) {
-        ans2 = comb.C(N + M - 1, N) * c.pow(M - 1);
-    }   
-    mm ans = ans1 - ans2;
-    out(ans.x);
+/**/INT(N, M, S);
+  	v<v<pii>> e(N + 1);
+  	rep(i, M) {
+  		INT(x, y, w);
+  		e[x].pb({y, w}); 
+  		// e[y].pb({x, w});
+  	}
+
+  	auto dij = [&](int n, int s) -> v<I> {
+  		v<I> dis(n + 1, INF);
+  		pq<pii> pq;
+  		dis[s] = 0;
+  		pq.push({0, s});
+  		while(!empty(pq)) {
+  			auto [d, u] = pop(pq);
+  			if(d > dis[u]) continue;
+
+  			each(v, w, e[u]) if(chmin(dis[v], dis[u] + w)) 
+  				pq.push({dis[v], v});
+  		}
+  		return dis;
+  	};
+
+  	auto ans = dij(N, S);
+  	rep(i, 1, N + 1) print(ans[i], "");
 
 return;};
 }
@@ -241,16 +256,41 @@ struct RuntimeClock{std::chrono::high_resolution_clock::time_point s;RuntimeCloc
 
 signed main (){
     //FASTioMAGIC;
-    RuntimeClock _;
+    //RuntimeClock _;
     int t = 1;
-    // in(t);  //atcĬ�Ϲرգ�cf���迪��
+    // in(t);  //atc默认关闭，cf按需开启
     while(t --)
         sIsTiNeFiBeL::Tempest_Flare__The_Wind_Splitting_Magic_Bullet();
     return 0;
 }
 
+//test
+/*
+
+
+
+What's wrong with my code?
+1. 小数据？特殊数据？如 n = 1?
+2. 最小值，最大值取多少？是否会溢出？
+3. 初始值有没有赋值？有没有建树？
+4. 数组大小？是否越界？
+5. 思考暴力的时候，考虑是否可能是多个连续段？或者是个数不确定无法暴力？是否可以分治暴力？
+6. 进行详细的分类讨论?
+7. 选择的区间是否可以为空？
+
+Trick:
+1.
+2.
+3.
+
+About implementation skills:
+1. 全局常量均大写字母，而局部变量，临时变量，和函数传递的参数使用小写字母。
+2. 大模拟尽量遵循：怎么方便怎么写。
+3. 对于一些数据很小的需要维护的量并且需要大量讨论时，可以考虑把数组拆掉换成变量。
+4. 写成多个函数。
+*/
 
 
 //============================================================================//
-//==                        SISTINE_FIBEL  �����ƥ��`��=�ե��`�٥�            ==//
+//==                        SISTINE_FIBEL  システィーナ=フィーベル            ==//
 //============================================================================//

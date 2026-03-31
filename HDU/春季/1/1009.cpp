@@ -157,100 +157,106 @@ using namespace SistineFibel;
 #define is insert
 #define dbg debug
 
-const ll mod = 998244353;
-struct mm {
-   ll x;
-   mm(ll x_ = 0) : x(x_ % mod) {
-      if(x < 0) x += mod;
-   }
-   friend mm operator+(mm a, mm b) { return a.x + b.x; }
-   friend mm operator-(mm a, mm b) { return a.x - b.x; }
-   friend mm operator*(mm a, mm b) { return a.x * b.x; }
-   friend mm operator/(mm a, mm b) { return a * b.inv(); }
-
-   friend mm& operator+=(mm& a, mm b) { return a = a.x + b.x; }
-   friend mm& operator-=(mm& a, mm b) { return a = a.x - b.x; }
-   friend mm& operator*=(mm& a, mm b) { return a = a.x * b.x; }
-   friend mm& operator/=(mm& a, mm b) { return a = a * b.inv(); }
-   mm inv() const { return pow(mod - 2); }
-   mm pow(ll b) const {
-      mm a = *this, c = 1;
-      while(b) {
-         if(b & 1) c *= a;
-         a *= a;
-         b >>= 1;
-      }
-      return c;
-   }
-};
-
-struct Comb {
-private:
-    vector<mm> fact;
-    vector<mm> invf;
-public:
-    Comb(int _n) {
-        fact.resize(_n + 1);
-        invf.resize(_n + 1);
-        fact[0] = 1;
-        rep(i, 1, _n + 1) fact[i] = fact[i - 1] * i;
-        invf[_n] = fact[_n].inv();
-        for(int i = _n; i > 0; i --) invf[i - 1] = invf[i] * i;
-    }
-    mm C(int n, int k) {
-        if(k < 0 || k > n) return 0;
-        return fact[n] * invf[k] * invf[n - k];
-    }
-};
 
 #define el '\n'
 
 namespace sIsTiNeFiBeL {
 
-/*
-    a : [0, 1]
-    b : [0, +inf]
-    /sum_(i=0)^1 x^i * /sum_(i=0)^inf y^i - x^0 y^0 => (x+y)/(1-y)
-    [x^N y^M] /sum_(i=0)^inf ((x+y)/(1-y))^i
-    [x^N y^M] 1/ (1 - (x+y)/(1-y))
-    [x^N y^M] (1 - y) / (1 - x - 2y)
-    [x^N y^M] 1 / (1 - (x + 2y)) - [x^N y^(M - 1)] 1 / (1 - (x + 2y))
-    [x^N y^M] /sum_(i=0)^inf (x + 2y) ^ i - [x^N y^(M - 1)] /sum_(i=0)^inf (x + 2y) ^ i
-    i = N + M 
-    [x^N y^M] (x + 2y) ^ (N + M) - [x^N y^(M - 1)] (x + 2y) ^ (N + M - 1) 
-    C_(N)^(N + M) 2 ^ M -  C_(N)^(N + M - 1) 2 ^ (M - 1)
-*/
+
   inline void Tempest_Flare__The_Wind_Splitting_Magic_Bullet() {
-/**/INT(N, M);
-    // cout << 1 << endl;
-    int N_ = N + M + 10;
-    Comb comb(N_);
-    mm c = 2;
-    mm ans1 = comb.C(N + M, N) * c.pow(M);
-    mm ans2 = 0;
-    if(M != 0) {
-        ans2 = comb.C(N + M - 1, N) * c.pow(M - 1);
-    }   
-    mm ans = ans1 - ans2;
-    out(ans.x);
+/**/INT(k);
+  	vec(pii, V, 0);
+  	bool flg = 0;
+  	rep(i, k) {
+  		INT(x, y);
+  		if(x == 0 && y == 0) flg = 1;
+  		else V.pb({x, y});
+  	}
+  	if(flg) return(out(1));
+
+  	uniq(V);
+  	vec(I, dis, 1000 * 1000, -1);
+  	vec(I, q, 1000 * 1000);
+  	I st = 0, lst = 0;
+  	I tar = 400 * 801 + 400;
+
+  	#define x fi 
+  	#define y se
+
+  	each(v, V) {
+  		I nx = 400 + v.x;
+  		I ny = 400 + v.y;
+  		I id = nx * 801 + ny;
+
+  		if(id == tar) return(out(1));
+  		if(nx >= 0 && nx < 801 && ny >= 0 && ny < 801) if(dis[id] == -1) dis[id] = 1, q[lst ++] = id;
+  	}
+
+  	while(st < lst) {
+  		I now = q[st ++];
+  		I cx = now / 801;
+  		I cy = now % 801;
+  		I d = dis[now];
+
+  		each(v, V) {
+  			I nx = cx + v.x;
+  			if(nx < 0 || nx >= 801) continue;
+  			I ny = cy + v.y;
+  			if(ny < 0 || ny >= 801) continue;
+  			I id = nx * 801 + ny;
+
+  			if(id == tar) return(out(d + 1));
+
+  			if(dis[id] == -1) dis[id] = d + 1, q[lst ++] = id;
+  		}
+  	}
+  	out(-1);
 
 return;};
 }
+
+#undef x 
+#undef y
 
 struct RuntimeClock{std::chrono::high_resolution_clock::time_point s;RuntimeClock(){s=std::chrono::high_resolution_clock::now();}~RuntimeClock(){cerr<<"[Time] "<<std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now()-s).count()<<" ms\n";}};
 
 signed main (){
     //FASTioMAGIC;
-    RuntimeClock _;
+    //RuntimeClock _;
     int t = 1;
-    // in(t);  //atcĬ�Ϲرգ�cf���迪��
+    in(t);  //atc默认关闭，cf按需开启
     while(t --)
         sIsTiNeFiBeL::Tempest_Flare__The_Wind_Splitting_Magic_Bullet();
     return 0;
 }
 
+//test
+/*
+
+
+
+What's wrong with my code?
+1. 小数据？特殊数据？如 n = 1?
+2. 最小值，最大值取多少？是否会溢出？
+3. 初始值有没有赋值？有没有建树？
+4. 数组大小？是否越界？
+5. 思考暴力的时候，考虑是否可能是多个连续段？或者是个数不确定无法暴力？是否可以分治暴力？
+6. 进行详细的分类讨论?
+7. 选择的区间是否可以为空？
+
+Trick:
+1.
+2.
+3.
+
+About implementation skills:
+1. 全局常量均大写字母，而局部变量，临时变量，和函数传递的参数使用小写字母。
+2. 大模拟尽量遵循：怎么方便怎么写。
+3. 对于一些数据很小的需要维护的量并且需要大量讨论时，可以考虑把数组拆掉换成变量。
+4. 写成多个函数。
+*/
 
 
 //============================================================================//
-//==                        SISTINE_FIBEL  �����ƥ��`��=�ե��`�٥�            ==//
+//==                        SISTINE_FIBEL  システィーナ=フィーベル            ==//
 //============================================================================//
