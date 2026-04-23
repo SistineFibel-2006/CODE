@@ -1,0 +1,16 @@
+-*- mode: compilation; default-directory: "~/CODE/school/JAVA++/" -*-
+Compilation started at Thu Mar 19 11:20:23
+
+javac otn.java && java test
+otn.java:1: error: class, interface, annotation type, enum, record, method or field expected
+-*- mode: compilation; default-directory: "~/CODE/school/JAVA++/" -*-
+^
+otn.java:1: error: class, interface, annotation type, enum, record, method or field expected
+-*- mode: compilation; default-directory: "~/CODE/school/JAVA++/" -*-
+                              ^
+otn.java:5: error: '{' expected
+error: no class declared in source file
+                        ^
+3 errors
+
+Compilation exited abnormally with code 1 at Thu Mar 19 11:20:24, duration 0.54 s
