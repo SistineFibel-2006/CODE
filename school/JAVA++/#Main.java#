@@ -1,0 +1,8 @@
+public class Main {
+    public static void main(String [] argv) {
+
+	cnt.count();
+	System.out.println(cnt.getR()); // 5050
+	System.out.println(cnt.getR()); // 5050
+    }
+}
