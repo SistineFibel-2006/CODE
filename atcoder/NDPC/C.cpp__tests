@@ -1,0 +1,23 @@
+[
+	{
+		"correct_answers":
+		[
+			"624"
+		],
+		"test": "2\nabc de f\n"
+	},
+	{
+		"correct_answers":
+		[
+			"453125"
+		],
+		"test": "4\nab ab ab\n"
+	},
+	{
+		"correct_answers":
+		[
+			"669410767"
+		],
+		"test": "1000\natcoder algorithm lectures\n"
+	}
+]

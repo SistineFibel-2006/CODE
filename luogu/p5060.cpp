@@ -263,7 +263,7 @@ namespace sIsTiNeFiBeL {
   	};
 
   	auto [ans, path] = dij(A, B);
-
+ 		dbg(path);
   	if(ans == LINF) return(out("jjc fails in travelling"));
   	rev(path);
   	out(ans);
