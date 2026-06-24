@@ -1,33 +1,8 @@
-#if defined(__GNUC__)
-#include <bits/allocator.h>
-// #pragma GCC optimize("Ofast,unroll-loops")
-// #pragma GCC target("avx2,popcnt")
-#endif
-#include "iostream"
-#include "vector"
-#include "unordered_map"
-#include "map"
-#include "set"
-#include "unordered_set"
-#include "array"
-#include "algorithm"
-#include "string"
-#include "cstring"
-#include "cmath"
-#include "queue"
-#include "stack"
-#include "functional"
-#include "utility"
-#include "cassert"
-#include "type_traits"
-#include "bits/stdc++.h"
+#include <bits/stdc++.h>
 using namespace std;
-//#include "atcoder/all"
-
+// #include "atcoder/all"
 namespace atcoder{}
 using namespace atcoder;
-
-bool switchdebug = 0;
 
 namespace SistineFibel{
     // #define all(x) (x).begin(),(x).end()
@@ -227,54 +202,38 @@ namespace SistineFibel{
       if (off == 0) B.erase(B.begin());
       return B;
     }
-
     #ifndef DEBUG 
       #define assert(x) (void(0))
     #endif 
-
 } //NAMESPCACE SistineFibel
 using namespace SistineFibel;
-#define defiM void init();void Mainsol()
 #define pb push_back
-#define fi first
-#define se second
+#define em emplace_back
+#define fst first
+#define snd second
 #define is insert
 #define dbg debug
 #define as(...) assert(__VA_ARGS__)
 #define el '\n'
 
-int32_t main(signed argc, char * argv[]){
-    //RuntimeClock _;
-    if(argc > 1 && strcmp(argv[1], "D") == 0) switchdebug = 1;
-    defiM;
-    if(switchdebug) {
-      while(1) {
-        init(), Mainsol();
-        cout.flush();
-      }
-    } else {
-      int t = 1;
-      in(t);  //atc默认关闭，cf按需开启
-      while(t --) {
-        init(), Mainsol();
-      }
-    }
-    return 0;
-}
 
-void Mainsol() {
+auto Mainsol = [](){
+  
+};
 
-}
+string MAIN = []() {
+  Int T__ = 0;
+  in(T__); //
+  rep(TestCase, T__){dbg(TestCase); Mainsol();}
+  return "Fibel";
+}();
 
-void init() {
-
-}
-
+int32_t main(){return 0;}
 //test
 /*
 
 */
 
 //============================================================================//
-//==                        SISTINE_FIBEL  システィーナ=フィーベル            ==//
+//==                        SISTINE_FIBEL  システィーナ=フィーベ??            ==//
 //============================================================================//
